@@ -1,0 +1,11 @@
+{
+  "containerConfig": [
+    {
+      "id": "java-20",
+      "image": "eclipse-temurin:20-jdk",
+      "compilationCmd": "",
+      "executionCmd": "touch test.txt",
+      "reserveContainerAmount": 1
+    }
+  ]
+}
