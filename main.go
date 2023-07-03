@@ -19,7 +19,7 @@ func main() {
 	configManager.ReadConfig()
 
 	containerService := container.NewService()
-	cr := codeRunner.NewService(containerService)
+	cr := codeRunner.NewService(ctx, containerService)
 	s, err := server.NewServer(8080, "localhost")
 	if err != nil {
 		log.Fatalf("could not start init server: %s\n", err)
@@ -48,5 +48,5 @@ func main() {
 	}()
 	ctx, cancel := context.WithTimeout(ctx, 60*time.Second)
 	defer cancel()
-	containerService.Shutdown(ctx)
+	s.CodeRunner.Shutdown(ctx)
 }

@@ -1,10 +1,13 @@
 package container
 
-type RunCommandParams struct {
-	CmdID string
-}
+import (
+	"code-runner/model"
+)
 
-type RunCommandWithFilesParams struct {
-	CmdID string
-	Files map[string]string
+type RunCommandParams struct {
+	Cmd   string
+	Files []*model.SourceFile
+}
+type RemoveCommandParams struct {
+	Force bool
 }

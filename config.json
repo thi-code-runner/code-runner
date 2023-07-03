@@ -3,8 +3,8 @@
     {
       "id": "java-20",
       "image": "eclipse-temurin:20-jdk",
-      "compilationCmd": "",
-      "executionCmd": "touch test.txt",
+      "compilationCmd": "javac Main.java",
+      "executionCmd": "java Main",
       "reserveContainerAmount": 1
     }
   ]

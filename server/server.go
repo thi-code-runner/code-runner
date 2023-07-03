@@ -1,12 +1,14 @@
 package server
 
 import (
+	"code-runner/model"
 	"code-runner/services/codeRunner"
+	"encoding/json"
 	"fmt"
+	"github.com/google/uuid"
 	"log"
 	"net/http"
 	"nhooyr.io/websocket"
-	"nhooyr.io/websocket/wsjson"
 )
 
 type Server struct {
@@ -19,7 +21,7 @@ type Server struct {
 
 func NewServer(port int, addr string) (*Server, error) {
 	if port < 1024 && port > 49151 {
-		return nil, fmt.Errorf("validation error: port must be between [1024;49151] but was %d", port)
+		return nil, fmt.Errorf("validation error_util: port must be between [1024;49151] but was %d", port)
 	}
 	if len(addr) <= 0 {
 		addr = "localhost"
@@ -36,23 +38,55 @@ func (s *Server) Run() {
 
 func (s *Server) initRoutes() {
 	s.mux.HandleFunc("/run", func(w http.ResponseWriter, r *http.Request) {
+		var sessionKey string
+		ses, err := r.Cookie("code-runner-session")
+		if err != nil {
+			sessionKey = uuid.New().String()
+			w.Header().Set("Set-Cookie", fmt.Sprintf("code-runner-session=%s", sessionKey))
+		} else {
+			sessionKey = ses.Value
+		}
 		c, err := websocket.Accept(w, r, nil)
 		if err != nil {
 			// ...
 		}
-		defer c.Close(websocket.StatusInternalError, "the sky is falling")
-
+		defer c.Close(websocket.StatusInternalError, "")
+		counter := 0
 		for {
-			var v interface{}
-			err = wsjson.Read(r.Context(), c, &v)
+			var v model.GenericRequest
+			_, buf, err := c.Read(r.Context())
 			if err != nil {
-				// ...
-				log.Printf("%s\n", err)
-				return
+				c.Close(websocket.StatusInternalError, "could not parse json")
 			}
-			log.Printf("received: %v", v)
+			err = json.Unmarshal(buf, &v)
+			if err != nil {
+				c.Close(websocket.StatusInternalError, "could not parse json")
+			}
+			switch v.Type {
+			case "execute/run":
+				go func() {
+					var runRequest model.RunRequest
+					err = json.Unmarshal(buf, &runRequest)
+					if err != nil {
+						c.Close(websocket.StatusInternalError, "could not parse json")
+					}
+					data := runRequest.Data
+					err := s.CodeRunner.Execute(r.Context(), data.Cmd, codeRunner.ExecuteParams{SessionKey: sessionKey, Con: c, Files: data.Sourcefiles, MainFile: data.Mainfilename})
+					if err != nil {
+						log.Printf("%s\n", err)
+						return
+					}
+				}()
+				counter++
+				break
+			case "execute/input":
+				var stdinRequest model.StdinRequest
+				err = json.Unmarshal(buf, &stdinRequest)
+				s.CodeRunner.SendStdIn(r.Context(), stdinRequest.Stdin, sessionKey)
+			case "execute/test":
+				fmt.Printf("IN HERE\n")
+			}
 		}
-
 		c.Close(websocket.StatusNormalClosure, "")
 	})
 }
