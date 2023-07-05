@@ -24,6 +24,5 @@ func (s *Service) outputTest(ctx context.Context, cmdID string, test *model.Test
 	if string(params.Writer.GetOutput()) == test.Param["expected"] {
 		return &model.TestResponse{Test: test, Passed: true}
 	}
-	fmt.Println(string(params.Writer.GetOutput()))
 	return &model.TestResponse{Test: test, Message: fmt.Sprintf("output test failed: expected: %q, actual: %q\n", test.Param["expected"], params.Writer.GetOutput()), Passed: false}
 }
