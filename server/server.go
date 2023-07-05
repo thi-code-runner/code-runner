@@ -51,7 +51,6 @@ func (s *Server) initRoutes() {
 			// ...
 		}
 		defer c.Close(websocket.StatusInternalError, "")
-		counter := 0
 		for {
 			var v model.GenericRequest
 			_, buf, err := c.Read(r.Context())
@@ -71,20 +70,34 @@ func (s *Server) initRoutes() {
 						c.Close(websocket.StatusInternalError, "could not parse json")
 					}
 					data := runRequest.Data
-					err := s.CodeRunner.Execute(r.Context(), data.Cmd, codeRunner.ExecuteParams{SessionKey: sessionKey, Con: c, Files: data.Sourcefiles, MainFile: data.Mainfilename})
+					wsWriter := WSWriter{Con: c}
+					err := s.CodeRunner.Execute(r.Context(), data.Cmd, codeRunner.ExecuteParams{SessionKey: sessionKey, Writer: &wsWriter, Files: data.Sourcefiles, MainFile: data.Mainfilename})
 					if err != nil {
 						log.Printf("%s\n", err)
 						return
 					}
 				}()
-				counter++
 				break
 			case "execute/input":
-				var stdinRequest model.StdinRequest
-				err = json.Unmarshal(buf, &stdinRequest)
-				s.CodeRunner.SendStdIn(r.Context(), stdinRequest.Stdin, sessionKey)
+				go func() {
+					var stdinRequest model.StdinRequest
+					err = json.Unmarshal(buf, &stdinRequest)
+					s.CodeRunner.SendStdIn(r.Context(), stdinRequest.Stdin, sessionKey)
+				}()
 			case "execute/test":
-				fmt.Printf("IN HERE\n")
+				go func() {
+					var testRequest model.TestRequest
+					err = json.Unmarshal(buf, &testRequest)
+					wsWriter := WSWriter{Con: c}
+					testResults := s.CodeRunner.ExecuteCheck(r.Context(), testRequest.Data.Cmd,
+						codeRunner.CheckParams{ExecuteParams: codeRunner.ExecuteParams{Writer: &wsWriter, SessionKey: sessionKey, Files: testRequest.Data.Sourcefiles},
+							Tests: testRequest.Data.Tests})
+					testResultsJson, err := json.Marshal(testResults)
+					if err != nil {
+						return
+					}
+					wsWriter.GetTestWriter().Write(testResultsJson)
+				}()
 			}
 		}
 		c.Close(websocket.StatusNormalClosure, "")

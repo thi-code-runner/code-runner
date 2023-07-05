@@ -5,22 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="92bafd55-f7e1-4d2c-ac68-e22b7983305a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/error_util/error.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/generic_request.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/codeRunner/params.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/session/session.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/ws_writer.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/codeRunner/code_runner_check.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/codeRunner/code_runner_execute.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/codeRunner/code_runner_stdin.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code-runner.iml" beforeDir="false" afterPath="$PROJECT_DIR$/code-runner.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/error_response.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/error_response.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/test_request.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/test_request.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/test_response.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/test_response.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/code_runner.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/params.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/params.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/container/container.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/container.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/container/params.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/params.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tar.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/tar.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,14 +96,42 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1687780674041</updated>
-      <workItem from="1687780675616" duration="41407000" />
+      <workItem from="1687780675616" duration="50757000" />
     </task>
+    <task id="LOCAL-00001" summary="enable stdin passing from websocket connection">
+      <created>1688410773989</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1688410773989</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="enable stdin passing from websocket connection" />
+    <option name="LAST_COMMIT_MESSAGE" value="enable stdin passing from websocket connection" />
+  </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/services/codeRunner/code_runner_stdin.go</url>
+          <line>10</line>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/server/ws_writer.go</url>
+          <line>54</line>
+          <option name="timeStamp" value="35" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

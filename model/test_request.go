@@ -1,8 +1,8 @@
 package model
 
 type TestRequest struct {
-	Type string      `json:"type"`
-	Data interface{} `json:"data"`
+	Type string   `json:"type"`
+	Data TestData `json:"data"`
 }
 type TestData struct {
 	Cmd string `json:"cmd"`
@@ -15,6 +15,6 @@ type TestData struct {
 }
 
 type TestConfiguration struct {
-	Type  string                 `json:"type"`
-	Param map[string]interface{} `json:"param"`
+	Type  string            `json:"type"`
+	Param map[string]string `json:"param"`
 }
