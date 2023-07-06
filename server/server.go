@@ -2,6 +2,7 @@ package server
 
 import (
 	"code-runner/model"
+	"code-runner/network/wswriter"
 	"code-runner/services/codeRunner"
 	"encoding/json"
 	"fmt"
@@ -70,8 +71,12 @@ func (s *Server) initRoutes() {
 						c.Close(websocket.StatusInternalError, "could not parse json")
 					}
 					data := runRequest.Data
-					wsWriter := WSWriter{Con: c}
-					err := s.CodeRunner.Execute(r.Context(), data.Cmd, codeRunner.ExecuteParams{SessionKey: sessionKey, Writer: &wsWriter, Files: data.Sourcefiles, MainFile: data.Mainfilename})
+					wsWriter := wswriter.NewWriter(c, wswriter.WriteOutput)
+					err := s.CodeRunner.Execute(
+						r.Context(),
+						data.Cmd,
+						codeRunner.ExecuteParams{SessionKey: sessionKey, Writer: wsWriter, Files: data.Sourcefiles, MainFile: data.Mainfilename},
+					)
 					if err != nil {
 						log.Printf("%s\n", err)
 						return
@@ -88,15 +93,18 @@ func (s *Server) initRoutes() {
 				go func() {
 					var testRequest model.TestRequest
 					err = json.Unmarshal(buf, &testRequest)
-					wsWriter := WSWriter{Con: c}
-					testResults := s.CodeRunner.ExecuteCheck(r.Context(), testRequest.Data.Cmd,
-						codeRunner.CheckParams{ExecuteParams: codeRunner.ExecuteParams{Writer: &wsWriter, SessionKey: sessionKey, Files: testRequest.Data.Sourcefiles},
-							Tests: testRequest.Data.Tests})
+					wsWriter := wswriter.NewWriter(c, wswriter.WriteOutput)
+					testResults, _ := s.CodeRunner.ExecuteCheck(
+						r.Context(),
+						testRequest.Data.Cmd,
+						codeRunner.CheckParams{ExecuteParams: codeRunner.ExecuteParams{Writer: wsWriter, SessionKey: sessionKey, Files: testRequest.Data.Sourcefiles},
+							Tests: testRequest.Data.Tests},
+					)
 					testResultsJson, err := json.Marshal(testResults)
 					if err != nil {
 						return
 					}
-					wsWriter.GetTestWriter().Write(testResultsJson)
+					wsWriter.WithType(wswriter.WriteTest).Write(testResultsJson)
 				}()
 			}
 		}

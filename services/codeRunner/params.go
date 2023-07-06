@@ -2,16 +2,11 @@ package codeRunner
 
 import (
 	"code-runner/model"
-	"io"
+	"code-runner/network/wswriter"
 )
 
-type Writer interface {
-	GetOutputWriter() io.Writer
-	GetTestWriter() io.Writer
-	GetOutput() []byte
-}
 type ExecuteParams struct {
-	Writer     Writer
+	Writer     wswriter.Writer
 	SessionKey string
 	Files      []*model.SourceFile
 	MainFile   string

@@ -3,6 +3,7 @@ package codeRunner
 import (
 	"code-runner/config"
 	errorutil "code-runner/error_util"
+	"code-runner/network/wswriter"
 	"code-runner/services/container"
 	"code-runner/session"
 	"context"
@@ -33,7 +34,7 @@ func (s *Service) Execute(ctx context.Context, id string, params ExecuteParams) 
 		}
 		con, _, err := s.ContainerService.RunCommand(ctx, containerID, container.RunCommandParams{Cmd: containerConf.CompilationCmd})
 		defer con.Close()
-		s.copy(params.Writer.GetOutputWriter(), con)
+		s.copy(params.Writer.WithType(wswriter.WriteOutput), con)
 		if err != nil {
 			return errorutil.ErrorWrap(err, "compilation failed")
 		}
@@ -44,7 +45,7 @@ func (s *Service) Execute(ctx context.Context, id string, params ExecuteParams) 
 	con, _, err := s.ContainerService.RunCommand(ctx, containerID, container.RunCommandParams{Cmd: containerConf.ExecutionCmd})
 	defer con.Close()
 	sess.Con = con
-	err = s.copy(params.Writer.GetOutputWriter(), con)
+	err = s.copy(params.Writer.WithType(wswriter.WriteOutput), con)
 	if err != nil {
 		return errorutil.ErrorWrap(err, "execution failed")
 	}

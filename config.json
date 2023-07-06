@@ -3,8 +3,15 @@
     {
       "id": "java-20",
       "image": "eclipse-temurin:20-jdk",
-      "compilationCmd": "javac Main.java",
+      "compilationCmd": "javac *.java",
       "executionCmd": "java Main",
+      "reserveContainerAmount": 1
+    },
+    {
+      "id": "junit-5",
+      "image": "eclipse-temurin:20-jdk",
+      "compilationCmd": "javac -d target -cp target:junit-platform-console-standalone-1.9.3.jar *.java",
+      "executionCmd": "java -jar junit-platform-console-standalone-1.9.3.jar --class-path target --select-class PrinterTest",
       "reserveContainerAmount": 1
     }
   ]

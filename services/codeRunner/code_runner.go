@@ -13,8 +13,11 @@ import (
 	"time"
 )
 
-var mu sync.Mutex
-var once sync.Once
+var (
+	mu               sync.Mutex
+	once             sync.Once
+	pullImageTimeout = 10000 * time.Millisecond
+)
 
 type ContainerService interface {
 	RunCommand(context.Context, string, container.RunCommandParams) (net.Conn, string, error)
@@ -22,8 +25,11 @@ type ContainerService interface {
 	PullImage(context.Context, string, io.Writer) error
 	ContainerRemove(context.Context, string, container.RemoveCommandParams) error
 	CopyToContainer(context.Context, string, []*model.SourceFile) error
+	GetReturnCode(context.Context, string) (int, error)
 }
 type Service struct {
+	sync.Mutex
+	sync.Once
 	ContainerService   ContainerService
 	reservedContainers map[string][]string
 	containers         map[string]struct{}
@@ -31,7 +37,7 @@ type Service struct {
 
 func NewService(ctx context.Context, containerService ContainerService) *Service {
 	s := &Service{ContainerService: containerService}
-	once.Do(func() {
+	s.Do(func() {
 		var buf bytes.Buffer
 		s.reservedContainers = make(map[string][]string)
 		s.containers = make(map[string]struct{})
@@ -42,12 +48,12 @@ func NewService(ctx context.Context, containerService ContainerService) *Service
 			if cc.ReserveContainerAmount > 0 {
 				for i := 0; i < cc.ReserveContainerAmount; i++ {
 					func() {
-						ctx, cancel := context.WithTimeout(ctx, 10000*time.Millisecond)
+						ctx, cancel := context.WithTimeout(ctx, pullImageTimeout)
 						defer cancel()
 						id, _ := s.ContainerService.CreateAndStartContainer(ctx, cc.Image)
-						mu.Lock()
+						s.Lock()
+						defer s.Unlock()
 						s.reservedContainers[cc.Image] = append(s.reservedContainers[cc.Image], id)
-						mu.Unlock()
 					}()
 				}
 			}
@@ -60,12 +66,14 @@ func (s *Service) getContainerID(ctx context.Context, containerID string, contai
 	if _, ok := s.containers[containerID]; !ok {
 		relevantContainers := s.reservedContainers[containerConf.Image]
 		if len(relevantContainers) > 0 {
-			mu.Lock()
-			relevantContainer := relevantContainers[len(relevantContainers)-1]
-			s.containers[relevantContainer] = struct{}{}
-			containerID = relevantContainer
-			s.reservedContainers[containerConf.Image] = s.reservedContainers[containerConf.Image][:len(relevantContainers)-1]
-			mu.Unlock()
+			func() {
+				s.Lock()
+				defer s.Unlock()
+				relevantContainer := relevantContainers[len(relevantContainers)-1]
+				s.containers[relevantContainer] = struct{}{}
+				containerID = relevantContainer
+				s.reservedContainers[containerConf.Image] = s.reservedContainers[containerConf.Image][:len(relevantContainers)-1]
+			}()
 		} else {
 			var err error
 			containerID, err = s.ContainerService.CreateAndStartContainer(ctx, containerConf.Image)
@@ -75,33 +83,4 @@ func (s *Service) getContainerID(ctx context.Context, containerID string, contai
 		}
 	}
 	return containerID, nil
-}
-
-func (s *Service) Shutdown(ctx context.Context) {
-	for _, v := range s.reservedContainers {
-		for _, id := range v {
-			_ = s.ContainerService.ContainerRemove(ctx, id, container.RemoveCommandParams{Force: true})
-		}
-	}
-	for id := range s.containers {
-		_ = s.ContainerService.ContainerRemove(ctx, id, container.RemoveCommandParams{Force: true})
-	}
-}
-
-func (s *Service) copy(w io.Writer, r io.Reader) error {
-	var err error
-	buf := make([]byte, 32*1024)
-	for {
-		n, er := r.Read(buf)
-		if n > 0 {
-			w.Write(buf[0:n])
-		}
-		if er != nil {
-			if er != io.EOF {
-				err = er
-			}
-			break
-		}
-	}
-	return err
 }
