@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"sync"
+	"time"
 )
 
 var (
@@ -15,6 +16,7 @@ var (
 type Session struct {
 	ContainerID string
 	Con         net.Conn
+	Updated     time.Time
 }
 
 func init() {

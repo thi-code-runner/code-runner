@@ -5,8 +5,9 @@ import (
 )
 
 type RunCommandParams struct {
-	Cmd   string
-	Files []*model.SourceFile
+	Cmd       string
+	Files     []*model.SourceFile
+	Resources []string
 }
 type RemoveCommandParams struct {
 	Force bool

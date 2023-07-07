@@ -38,13 +38,13 @@ func (ws *WSWriter) Write(buf []byte) (int, error) {
 	switch ws.Type {
 	case WriteOutput:
 		var respJson []byte
-		resp := model.RunResponse{Output: string(buf)}
+		resp := model.RunResponse{Type: "output/run", Data: string(buf)}
 		respJson, err = json.Marshal(resp)
 		err = ws.Con.Write(context.Background(), 1, respJson)
 		ws.Output.Write(buf)
 	case WriteError:
 		var respJson []byte
-		resp := model.ErrorResponse{Error: string(buf)}
+		resp := model.ErrorResponse{Type: "output/error", Error: string(buf)}
 		respJson, err = json.Marshal(resp)
 		err = ws.Con.Write(context.Background(), 1, respJson)
 	case WriteTest:

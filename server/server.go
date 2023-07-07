@@ -100,11 +100,13 @@ func (s *Server) initRoutes() {
 						codeRunner.CheckParams{ExecuteParams: codeRunner.ExecuteParams{Writer: wsWriter, SessionKey: sessionKey, Files: testRequest.Data.Sourcefiles},
 							Tests: testRequest.Data.Tests},
 					)
-					testResultsJson, err := json.Marshal(testResults)
+
+					testResult := model.TestResponse{Type: "output/test", Data: testResults}
+					testResultJson, err := json.Marshal(testResult)
 					if err != nil {
 						return
 					}
-					wsWriter.WithType(wswriter.WriteTest).Write(testResultsJson)
+					wsWriter.WithType(wswriter.WriteTest).Write(testResultJson)
 				}()
 			}
 		}

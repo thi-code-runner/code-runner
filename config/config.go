@@ -9,16 +9,16 @@ import (
 var Conf *Config
 
 type ConfigManager struct {
-	Path       string
-	LiveReload bool
-	Config     *Config
+	Path   string
+	Config *Config
 }
 type ContainerConfig struct {
-	ID                     string `json:"id"`
-	Image                  string `json:"image"`
-	CompilationCmd         string `json:"compilationCmd"`
-	ExecutionCmd           string `json:"executionCmd"`
-	ReserveContainerAmount int    `json:"reserveContainerAmount"`
+	ID                     string   `json:"id"`
+	Image                  string   `json:"image"`
+	CompilationCmd         string   `json:"compilationCmd"`
+	ExecutionCmd           string   `json:"executionCmd"`
+	ReserveContainerAmount int      `json:"reserveContainerAmount"`
+	Add                    []string `json:"add"`
 }
 
 type Config struct {
