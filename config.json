@@ -14,6 +14,12 @@
       "executionCmd": "java -jar resources/junit-platform-console-standalone-1.9.3.jar --class-path target --select-class PrinterTest",
       "add": ["./resources/junit-platform-console-standalone-1.9.3.jar"],
       "reserveContainerAmount": 0
+    },
+    {
+      "id": "script",
+      "image": "alpine:latest",
+      "executionCmd": "./test.sh",
+      "reserveContainerAmount": 0
     }
   ]
 }

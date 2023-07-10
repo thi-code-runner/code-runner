@@ -1,6 +1,7 @@
 package container
 
 import (
+	errorutil "code-runner/error_util"
 	"context"
 	"fmt"
 	"github.com/docker/docker/api/types"
@@ -16,8 +17,9 @@ type Service struct {
 func NewService() *Service {
 	var cs Service
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
+	_, err = cli.ServerVersion(context.Background())
 	if err != nil {
-		log.Fatalf("could not connect to docker engine because of %q", err)
+		log.Fatal(errorutil.ErrorWrap(err, "could not connect to docker engine"))
 	}
 	cs.cli = cli
 	return &cs

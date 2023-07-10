@@ -8,23 +8,35 @@ import (
 	"code-runner/session"
 	"context"
 	"fmt"
+	"log"
 )
 
 func (s *Service) ExecuteCheck(ctx context.Context, cmdID string, params CheckParams) ([]*model.TestResponseData, error) {
 	testResults := make([]*model.TestResponseData, 0)
 	containerConf, containerID, err := s.getContainer(ctx, cmdID, params.SessionKey)
 	if err != nil {
-		return nil, err
+		message := errorutil.ErrorWrap(err, "could not execute program")
+		log.Println(message)
+		return nil, message
 	}
 	err = s.ContainerService.CopyToContainer(ctx, containerID, params.Files)
 	if err != nil {
-		return nil, errorutil.ErrorWrap(err, "could not create files")
+		message := errorutil.ErrorWrap(fmt.Errorf("could not add files to sandbox environment"), "could not execute program")
+		log.Println(errorutil.ErrorWrap(err, message.Error()))
+		return nil, message
 	}
 	err = s.compile(ctx, containerID, containerConf, params.Writer)
 	if err != nil {
-		return nil, err
+		message := errorutil.ErrorWrap(fmt.Errorf("could not compile program with command %q", containerConf.CompilationCmd), "could not execute program")
+		log.Println(errorutil.ErrorWrap(err, message.Error()))
+		return nil, message
 	}
-	sess, _ := session.GetSession(params.SessionKey)
+	sess, err := session.GetSession(params.SessionKey)
+	if err != nil {
+		message := errorutil.ErrorWrap(fmt.Errorf("could not retreive user session with key %q", params.SessionKey), "could not execute program")
+		log.Println(errorutil.ErrorWrap(err, message.Error()))
+		return nil, message
+	}
 	for _, test := range params.Tests {
 		switch test.Type {
 		case "output":

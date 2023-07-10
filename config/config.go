@@ -33,12 +33,12 @@ func (cr *ConfigManager) ReadConfig() {
 	log.Printf("reading config file: %s", cr.Path)
 	b, err := os.ReadFile(cr.Path)
 	if err != nil {
-		log.Fatalf("could not read config file because of %q", err)
+		log.Fatalf("could not read config file\n%q", err)
 	}
 	var config Config
 	err = json.Unmarshal(b, &config)
 	if err != nil {
-		log.Fatalf("could not read config file because of %q", err)
+		log.Fatalf("could not read config file\n%q", err)
 	}
 	cr.Config = &config
 	Conf = &config

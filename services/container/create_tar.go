@@ -14,6 +14,9 @@ func createSourceTar(sourceFiles []*model.SourceFile) ([]byte, error) {
 	defer w.Close()
 	for _, f := range sourceFiles {
 		hdr := new(tar.Header)
+		hdr.Uid = 0
+		hdr.Gid = 0
+		hdr.Mode = 0755
 		hdr.Name = f.Filename
 		hdr.Size = int64(len(f.Content))
 		hdr.AccessTime = time.Now()
@@ -40,6 +43,9 @@ func createTar(filenames []string) ([]byte, error) {
 			return nil, err
 		}
 		hdr := new(tar.Header)
+		hdr.Uid = 0
+		hdr.Gid = 0
+		hdr.Mode = 0755
 		hdr.Name = f
 		hdr.Size = int64(len(file))
 		hdr.AccessTime = time.Now()

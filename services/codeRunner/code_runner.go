@@ -3,12 +3,15 @@ package codeRunner
 import (
 	"bytes"
 	"code-runner/config"
+	errorutil "code-runner/error_util"
 	"code-runner/model"
 	"code-runner/services/container"
 	"code-runner/services/scheduler"
 	"code-runner/session"
 	"context"
+	"fmt"
 	"io"
+	"log"
 	"net"
 	"os"
 	"sync"
@@ -48,7 +51,10 @@ func NewService(ctx context.Context, containerService ContainerService, schedule
 		s.containers = make(map[string]struct{})
 		for _, cc := range config.Conf.ContainerConfig {
 			//pulling images of config file
-			s.ContainerService.PullImage(ctx, cc.Image, &buf)
+			err := s.ContainerService.PullImage(ctx, cc.Image, &buf)
+			if err != nil {
+				log.Println(errorutil.ErrorWrap(err, fmt.Sprintf("could not pull container image %s", cc.Image)))
+			}
 			//reserving reservedContainers
 			if cc.ReserveContainerAmount > 0 {
 				for i := 0; i < cc.ReserveContainerAmount; i++ {
@@ -65,6 +71,7 @@ func NewService(ctx context.Context, containerService ContainerService, schedule
 		}
 		io.Copy(os.Stdout, &buf)
 		s.SchedulerService.AddJob(&scheduler.Job{D: 30 * time.Second, Apply: func() {
+			//Cleans up containers present in code-runner but not actually running on host system
 			actualContainers, _ := s.ContainerService.GetContainers(ctx)
 			actualContainerMap := make(map[string]struct{})
 			for _, ac := range actualContainers {
@@ -77,6 +84,7 @@ func NewService(ctx context.Context, containerService ContainerService, schedule
 			}
 		}})
 		s.SchedulerService.AddJob(&scheduler.Job{D: time.Minute, Apply: func() {
+			//clean up sessions and associated containers after a certain time of no usage
 			for k, v := range session.GetSessions() {
 				if v.Updated.Add(90 * time.Minute).Before(time.Now()) {
 					err := s.ContainerService.ContainerRemove(ctx, v.ContainerID, container.RemoveCommandParams{Force: true})
@@ -119,7 +127,9 @@ func (s *Service) getContainer(ctx context.Context, cmdID string, sessionKey str
 			var err error
 			containerID, err = s.ContainerService.CreateAndStartContainer(ctx, containerConf.Image)
 			if err != nil {
-				return nil, "", err
+				message := "could not create sandbox environment"
+				log.Println(errorutil.ErrorWrap(err, message))
+				return nil, "", fmt.Errorf(message)
 			}
 			func() {
 				s.Lock()
@@ -129,7 +139,9 @@ func (s *Service) getContainer(ctx context.Context, cmdID string, sessionKey str
 		}
 		err := s.ContainerService.CopyResourcesToContainer(ctx, containerID, containerConf.Add)
 		if err != nil {
-			return nil, "", err
+			message := "could not create necessary files in sandbox environment"
+			log.Println(errorutil.ErrorWrap(err, message))
+			return nil, "", fmt.Errorf(message)
 		}
 	}
 	sess = session.PutSession(sessionKey, &session.Session{ContainerID: containerID, CmdID: containerConf.ID, Updated: time.Now()})
