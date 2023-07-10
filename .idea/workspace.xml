@@ -5,21 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="92bafd55-f7e1-4d2c-ac68-e22b7983305a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/junit-platform-console-standalone-1.9.3.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/scheduler/scheduler.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/error_response.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/error_response.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/run_response.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/run_response.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/test_response.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/test_response.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network/wswriter/wswriter.go" beforeDir="false" afterPath="$PROJECT_DIR$/network/wswriter/wswriter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/code_runner.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner_check.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/code_runner_check.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner_execute.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/code_runner_execute.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/container/container_copy.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/container_copy.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/container/create_tar.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/create_tar.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/container/params.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/params.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/container/container.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/container.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/session/session.go" beforeDir="false" afterPath="$PROJECT_DIR$/session/session.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -50,40 +40,48 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "go.import.settings.migrated": "true",
-    "last_opened_file_path": "/Users/martin/Documents/studium/hochschule/master/code-runner/resources",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/martin/Documents/studium/hochschule/master/code-runner/resources&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/services" />
       <recent name="$PROJECT_DIR$/network/netwriter" />
       <recent name="$PROJECT_DIR$/common" />
       <recent name="$PROJECT_DIR$/services/container" />
       <recent name="$PROJECT_DIR$/config" />
-      <recent name="$PROJECT_DIR$/model" />
     </key>
   </component>
   <component name="RunManager">
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="code-runner" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build code-runner" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="code-runner" />
       <working_directory value="$PROJECT_DIR$" />
@@ -91,6 +89,15 @@
       <package value="code-runner" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="code-runner" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
       <method v="2" />
     </configuration>
     <recent_temporary>
@@ -107,7 +114,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1687780674041</updated>
-      <workItem from="1687780675616" duration="65857000" />
+      <workItem from="1687780675616" duration="67475000" />
+      <workItem from="1689001860039" duration="6675000" />
     </task>
     <task id="LOCAL-00001" summary="enable stdin passing from websocket connection">
       <created>1688410773989</created>
@@ -137,36 +145,29 @@
       <option name="project" value="LOCAL" />
       <updated>1688678903044</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="add unit test capabilities">
+      <created>1688748626984</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1688748626984</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <MESSAGE value="enable stdin passing from websocket connection" />
     <MESSAGE value="refactor and add outputtest capability" />
     <MESSAGE value="rm log" />
     <MESSAGE value="refactor writer and begin adding file test" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor writer and begin adding file test" />
+    <MESSAGE value="add unit test capabilities" />
+    <option name="LAST_COMMIT_MESSAGE" value="add unit test capabilities" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/session/session.go</url>
-          <line>31</line>
-          <option name="timeStamp" value="38" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/session/session.go</url>
-          <line>40</line>
-          <option name="timeStamp" value="39" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

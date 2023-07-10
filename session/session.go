@@ -15,6 +15,7 @@ var (
 
 type Session struct {
 	ContainerID string
+	CmdID       string
 	Con         net.Conn
 	Updated     time.Time
 }
@@ -39,4 +40,14 @@ func GetSession(key string) (*Session, error) {
 		return session, nil
 	}
 	return nil, fmt.Errorf("no session available")
+}
+
+func GetSessions() map[string]*Session {
+	return sessions
+}
+
+func DeleteSession(key string) {
+	mu.Lock()
+	defer mu.Unlock()
+	delete(sessions, key)
 }

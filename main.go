@@ -5,6 +5,7 @@ import (
 	"code-runner/server"
 	"code-runner/services/codeRunner"
 	"code-runner/services/container"
+	"code-runner/services/scheduler"
 	"context"
 	"fmt"
 	"log"
@@ -19,7 +20,10 @@ func main() {
 	configManager.ReadConfig()
 
 	containerService := container.NewService()
-	cr := codeRunner.NewService(ctx, containerService)
+	schedulerService := scheduler.NewScheduler(time.Second)
+
+	cr := codeRunner.NewService(ctx, containerService, schedulerService)
+
 	s, err := server.NewServer(8080, "localhost")
 	if err != nil {
 		log.Fatalf("could not start init server: %s\n", err)

@@ -5,6 +5,7 @@ import (
 	"code-runner/config"
 	"code-runner/model"
 	"code-runner/services/container"
+	"code-runner/services/scheduler"
 	"code-runner/session"
 	"context"
 	"io"
@@ -28,17 +29,19 @@ type ContainerService interface {
 	CopyToContainer(context.Context, string, []*model.SourceFile) error
 	CopyResourcesToContainer(context.Context, string, []string) error
 	GetReturnCode(context.Context, string) (int, error)
+	GetContainers(context.Context) ([]string, error)
 }
 type Service struct {
 	sync.Mutex
 	sync.Once
 	ContainerService   ContainerService
+	SchedulerService   *scheduler.Scheduler
 	reservedContainers map[string][]string
 	containers         map[string]struct{}
 }
 
-func NewService(ctx context.Context, containerService ContainerService) *Service {
-	s := &Service{ContainerService: containerService}
+func NewService(ctx context.Context, containerService ContainerService, schedulerService *scheduler.Scheduler) *Service {
+	s := &Service{ContainerService: containerService, SchedulerService: schedulerService}
 	s.Do(func() {
 		var buf bytes.Buffer
 		s.reservedContainers = make(map[string][]string)
@@ -61,6 +64,30 @@ func NewService(ctx context.Context, containerService ContainerService) *Service
 			}
 		}
 		io.Copy(os.Stdout, &buf)
+		s.SchedulerService.AddJob(&scheduler.Job{D: 30 * time.Second, Apply: func() {
+			actualContainers, _ := s.ContainerService.GetContainers(ctx)
+			actualContainerMap := make(map[string]struct{})
+			for _, ac := range actualContainers {
+				actualContainerMap[ac] = struct{}{}
+			}
+			for c, _ := range s.containers {
+				if _, ok := actualContainerMap[c]; !ok {
+					s.ContainerService.ContainerRemove(ctx, c, container.RemoveCommandParams{Force: true})
+				}
+			}
+		}})
+		s.SchedulerService.AddJob(&scheduler.Job{D: time.Minute, Apply: func() {
+			for k, v := range session.GetSessions() {
+				if v.Updated.Add(90 * time.Minute).Before(time.Now()) {
+					err := s.ContainerService.ContainerRemove(ctx, v.ContainerID, container.RemoveCommandParams{Force: true})
+					if err == nil {
+						delete(s.containers, v.ContainerID)
+						session.DeleteSession(k)
+					}
+				}
+			}
+		}})
+		s.SchedulerService.Run(ctx)
 	})
 	return s
 }
@@ -74,7 +101,7 @@ func (s *Service) getContainer(ctx context.Context, cmdID string, sessionKey str
 	}
 	var containerID string
 	sess, err := session.GetSession(sessionKey)
-	if err == nil {
+	if err == nil && cmdID == sess.CmdID {
 		containerID = sess.ContainerID
 	}
 	if _, ok := s.containers[containerID]; !ok {
@@ -105,6 +132,6 @@ func (s *Service) getContainer(ctx context.Context, cmdID string, sessionKey str
 			return nil, "", err
 		}
 	}
-	sess = session.PutSession(sessionKey, &session.Session{ContainerID: containerID, Updated: time.Now()})
+	sess = session.PutSession(sessionKey, &session.Session{ContainerID: containerID, CmdID: containerConf.ID, Updated: time.Now()})
 	return &containerConf, containerID, nil
 }
