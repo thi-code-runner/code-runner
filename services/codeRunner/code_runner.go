@@ -12,7 +12,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"net"
 	"os"
 	"sync"
 	"time"
@@ -25,7 +24,7 @@ var (
 )
 
 type ContainerService interface {
-	RunCommand(context.Context, string, container.RunCommandParams) (net.Conn, string, error)
+	RunCommand(context.Context, string, container.RunCommandParams) (io.ReadWriteCloser, string, error)
 	CreateAndStartContainer(context.Context, string) (string, error)
 	PullImage(context.Context, string, io.Writer) error
 	ContainerRemove(context.Context, string, container.RemoveCommandParams) error
@@ -106,6 +105,10 @@ func (s *Service) getContainer(ctx context.Context, cmdID string, sessionKey str
 			containerConf = c
 			break
 		}
+	}
+	if containerConf.ID == "" {
+		message := fmt.Errorf("no configuration found for %q", cmdID)
+		return nil, "", message
 	}
 	var containerID string
 	sess, err := session.GetSession(sessionKey)

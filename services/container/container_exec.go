@@ -5,10 +5,10 @@ import (
 	"context"
 	"fmt"
 	"github.com/docker/docker/api/types"
-	"net"
+	"io"
 )
 
-func (cs *Service) RunCommand(ctx context.Context, id string, params RunCommandParams) (net.Conn, string, error) {
+func (cs *Service) RunCommand(ctx context.Context, id string, params RunCommandParams) (io.ReadWriteCloser, string, error) {
 
 	exec, err := cs.cli.ContainerExecCreate(ctx, id, types.ExecConfig{AttachStdin: true, AttachStderr: true, AttachStdout: true, Tty: true, WorkingDir: "/src", Cmd: []string{"sh", "-c", params.Cmd}})
 	if err != nil {

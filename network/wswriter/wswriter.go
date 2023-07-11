@@ -5,6 +5,7 @@ import (
 	"code-runner/model"
 	"context"
 	"encoding/json"
+	"io"
 	"nhooyr.io/websocket"
 )
 
@@ -14,19 +15,27 @@ const (
 	WriteTest
 )
 
+type wsWriterWrapper struct {
+	Con *websocket.Conn
+}
+
+func (w *wsWriterWrapper) Write(buf []byte) (int, error) {
+	return len(buf), w.Con.Write(context.Background(), 1, buf)
+}
+
 type Writer interface {
 	Write([]byte) (int, error)
 	GetOutput() []byte
 	WithType(int) Writer
 }
 type WSWriter struct {
-	Con    *websocket.Conn
+	Con    io.Writer
 	Output bytes.Buffer
 	Type   int
 }
 
 func NewWriter(con *websocket.Conn, t int) *WSWriter {
-	return &WSWriter{Con: con, Type: t}
+	return &WSWriter{Con: &wsWriterWrapper{con}, Type: t}
 }
 
 func (ws *WSWriter) WithType(t int) Writer {
@@ -40,15 +49,15 @@ func (ws *WSWriter) Write(buf []byte) (int, error) {
 		var respJson []byte
 		resp := model.RunResponse{Type: "output/run", Data: string(buf)}
 		respJson, err = json.Marshal(resp)
-		err = ws.Con.Write(context.Background(), 1, respJson)
+		_, err = ws.Con.Write(respJson)
 		ws.Output.Write(buf)
 	case WriteError:
 		var respJson []byte
 		resp := model.ErrorResponse{Type: "output/error", Error: string(buf)}
 		respJson, err = json.Marshal(resp)
-		err = ws.Con.Write(context.Background(), 1, respJson)
+		_, err = ws.Con.Write(respJson)
 	case WriteTest:
-		err = ws.Con.Write(context.Background(), 1, buf)
+		_, err = ws.Con.Write(buf)
 	}
 	if err != nil {
 		return 0, err

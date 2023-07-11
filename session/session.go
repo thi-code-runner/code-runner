@@ -2,7 +2,7 @@ package session
 
 import (
 	"fmt"
-	"net"
+	"io"
 	"sync"
 	"time"
 )
@@ -16,7 +16,7 @@ var (
 type Session struct {
 	ContainerID string
 	CmdID       string
-	Con         net.Conn
+	Con         io.ReadWriteCloser
 	Updated     time.Time
 }
 

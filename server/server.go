@@ -58,11 +58,17 @@ func (s *Server) initRoutes() {
 			var v model.GenericRequest
 			_, buf, err := c.Read(r.Context())
 			if err != nil {
-				c.Close(websocket.StatusInternalError, "could not parse json")
+				err = errorutil.ErrorWrap(err, "code-runner failed\n\trequest encountered parse error")
+				wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(err.Error()))
+				log.Println(err)
+				continue
 			}
 			err = json.Unmarshal(buf, &v)
 			if err != nil {
-				c.Close(websocket.StatusInternalError, "could not parse json")
+				err = errorutil.ErrorWrap(err, "code-runner failed\n\trequest encountered json parse error")
+				wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(err.Error()))
+				log.Println(err)
+				continue
 			}
 			switch v.Type {
 			case "execute/run":
@@ -70,7 +76,10 @@ func (s *Server) initRoutes() {
 					var runRequest model.RunRequest
 					err = json.Unmarshal(buf, &runRequest)
 					if err != nil {
-						c.Close(websocket.StatusInternalError, "could not parse json")
+						err = errorutil.ErrorWrap(err, "code-runner failed\n\trexecute/run failed\n\trequest encountered json parse error")
+						wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(err.Error()))
+						log.Println(err)
+						return
 					}
 					data := runRequest.Data
 					wsWriter := wswriter.NewWriter(c, wswriter.WriteOutput)
@@ -80,7 +89,7 @@ func (s *Server) initRoutes() {
 						codeRunner.ExecuteParams{SessionKey: sessionKey, Writer: wsWriter, Files: data.Sourcefiles, MainFile: data.Mainfilename},
 					)
 					if err != nil {
-						wsWriter.WithType(wswriter.WriteError).Write([]byte(errorutil.ErrorWrap(err, "execute/run failed").Error()))
+						wsWriter.WithType(wswriter.WriteError).Write([]byte(errorutil.ErrorWrap(err, "code-runner failed\n\trexecute/run failed").Error()))
 						return
 					}
 				}()
@@ -90,11 +99,14 @@ func (s *Server) initRoutes() {
 					var stdinRequest model.StdinRequest
 					err = json.Unmarshal(buf, &stdinRequest)
 					if err != nil {
-						c.Close(websocket.StatusInternalError, "could not parse json")
+						err = errorutil.ErrorWrap(err, "code-runner failed\n\trexecute/input failed\n\trequest encountered json parse error")
+						wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(err.Error()))
+						log.Println(err)
+						return
 					}
 					err := s.CodeRunner.SendStdIn(r.Context(), stdinRequest.Stdin, sessionKey)
 					if err != nil {
-						wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(errorutil.ErrorWrap(err, "execute/input failed").Error()))
+						wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(errorutil.ErrorWrap(err, "code-runner failed\n\trexecute/input failed").Error()))
 						return
 					}
 				}()
@@ -103,7 +115,10 @@ func (s *Server) initRoutes() {
 					var testRequest model.TestRequest
 					err = json.Unmarshal(buf, &testRequest)
 					if err != nil {
-						c.Close(websocket.StatusInternalError, "could not parse json")
+						err = errorutil.ErrorWrap(err, "code-runner failed\n\trexecute/test failed\n\trequest encountered json parse error")
+						wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(err.Error()))
+						log.Println(err)
+						return
 					}
 					wsWriter := wswriter.NewWriter(c, wswriter.WriteOutput)
 					testResults, err := s.CodeRunner.ExecuteCheck(
@@ -114,20 +129,20 @@ func (s *Server) initRoutes() {
 					)
 
 					if err != nil {
-						wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(errorutil.ErrorWrap(err, "execute/test failed").Error()))
+						wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(errorutil.ErrorWrap(err, "code-runner failed\n\trexecute/test failed").Error()))
 						return
 					}
 					testResult := model.TestResponse{Type: "output/test", Data: testResults}
 					testResultJson, err := json.Marshal(testResult)
 					if err != nil {
-						wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(errorutil.ErrorWrap(err, "execute/test failed").Error()))
+						wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(errorutil.ErrorWrap(err, "code-runner failed\n\trexecute/test failed\n\trequest encountered json parse error").Error()))
 						log.Println(err)
 						return
 					}
 					wsWriter.WithType(wswriter.WriteTest).Write(testResultJson)
 				}()
 			default:
-				wswriter.NewWriter(c, wswriter.WriteError).Write([]byte("unrecognized message type"))
+				wswriter.NewWriter(c, wswriter.WriteError).Write([]byte("code-runner failed\n\tunrecognized websocket message type"))
 			}
 		}
 		c.Close(websocket.StatusNormalClosure, "")

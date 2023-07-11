@@ -11,6 +11,9 @@ import (
 )
 
 func (cs *Service) CopyToContainer(ctx context.Context, id string, files []*model.SourceFile) error {
+	if len(id) <= 0 {
+		return fmt.Errorf("could not copy files into docker container because of empty id argumetn")
+	}
 	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
 	defer cancel()
 	if len(files) > 0 {
@@ -20,7 +23,7 @@ func (cs *Service) CopyToContainer(ctx context.Context, id string, files []*mode
 		}
 		err = cs.cli.CopyToContainer(ctx, id, "/src", bytes.NewReader(tar), types.CopyToContainerOptions{AllowOverwriteDirWithFile: true})
 		if err != nil {
-			return errorutil.ErrorWrap(err, fmt.Sprintf("could not copy files into docker container %s", id))
+			return errorutil.ErrorWrap(err, fmt.Sprintf("could not copy files into docker container %q", id))
 		}
 	}
 	return nil
@@ -35,7 +38,7 @@ func (cs *Service) CopyResourcesToContainer(ctx context.Context, id string, reso
 		}
 		err = cs.cli.CopyToContainer(ctx, id, "/src", bytes.NewReader(tar), types.CopyToContainerOptions{AllowOverwriteDirWithFile: true})
 		if err != nil {
-			return errorutil.ErrorWrap(err, fmt.Sprintf("could not copy resources into docker container %s", id))
+			return errorutil.ErrorWrap(err, fmt.Sprintf("could not copy resources into docker container %q", id))
 		}
 	}
 	return nil

@@ -25,7 +25,7 @@ func (cs *Service) CreateAndStartContainer(ctx context.Context, image string) (s
 		OpenStdin:    true,
 	}, &container.HostConfig{NetworkMode: "none", AutoRemove: true}, nil, nil, containerName)
 	if err != nil {
-		return "", errorutil.ErrorWrap(err, fmt.Sprintf("could not create container with image %s", image))
+		return "", errorutil.ErrorWrap(err, fmt.Sprintf("could not create container with image %q", image))
 	}
 	err = cs.cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{})
 	if err != nil {
