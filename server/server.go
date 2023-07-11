@@ -58,10 +58,9 @@ func (s *Server) initRoutes() {
 			var v model.GenericRequest
 			_, buf, err := c.Read(r.Context())
 			if err != nil {
-				err = errorutil.ErrorWrap(err, "code-runner failed\n\trequest encountered parse error")
-				wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(err.Error()))
-				log.Println(err)
-				continue
+				if c.Ping(r.Context()) != nil {
+					break
+				}
 			}
 			err = json.Unmarshal(buf, &v)
 			if err != nil {
