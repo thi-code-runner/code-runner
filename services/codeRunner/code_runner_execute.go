@@ -14,41 +14,47 @@ import (
 func (s *Service) Execute(ctx context.Context, id string, params ExecuteParams) error {
 	containerConf, containerID, err := s.getContainer(ctx, id, params.SessionKey)
 	if err != nil {
-		message := errorutil.ErrorWrap(err, "could not execute program")
-		log.Println(message)
-		return message
+		message := "could not create sandbox environment"
+		errorSlug := errorutil.ErrorSlug()
+		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
+		return errorutil.ErrorWrap(errorSlug, message)
 	}
 	err = s.ContainerService.CopyToContainer(ctx, containerID, params.Files)
 	if err != nil {
-		message := errorutil.ErrorWrap(fmt.Errorf("could not add files to sandbox environment"), "could not execute program")
-		log.Println(errorutil.ErrorWrap(err, message.Error()))
-		return message
+		message := "could not add files to sandbox environment"
+		errorSlug := errorutil.ErrorSlug()
+		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
+		return errorutil.ErrorWrap(errorSlug, message)
 	}
 	err = s.compile(ctx, containerID, containerConf, params.Writer)
 	if err != nil {
-		message := errorutil.ErrorWrap(fmt.Errorf("could not compile program with command %q", containerConf.CompilationCmd), "could not execute program")
-		log.Println(errorutil.ErrorWrap(err, message.Error()))
-		return message
+		message := fmt.Sprintf("could not compile program with command %q", containerConf.CompilationCmd)
+		errorSlug := errorutil.ErrorSlug()
+		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
+		return errorutil.ErrorWrap(errorSlug, message)
 	}
 	con, _, err := s.ContainerService.RunCommand(ctx, containerID, container.RunCommandParams{Cmd: containerConf.ExecutionCmd})
 	if err != nil {
-		message := errorutil.ErrorWrap(fmt.Errorf("could not execute program with command %q", containerConf.ExecutionCmd), "could not execute program")
-		log.Println(errorutil.ErrorWrap(err, message.Error()))
-		return message
+		message := fmt.Sprintf("could not execute program with command %q", containerConf.ExecutionCmd)
+		errorSlug := errorutil.ErrorSlug()
+		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
+		return errorutil.ErrorWrap(errorSlug, message)
 	}
 	defer con.Close()
 	sess, err := session.GetSession(params.SessionKey)
 	if err != nil {
-		message := errorutil.ErrorWrap(fmt.Errorf("could not retreive user session with key %q", params.SessionKey), "could not execute program")
-		log.Println(errorutil.ErrorWrap(err, message.Error()))
-		return message
+		message := fmt.Sprintf("could not retreive user session with key %q", params.SessionKey)
+		errorSlug := errorutil.ErrorSlug()
+		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
+		return errorutil.ErrorWrap(errorSlug, message)
 	}
 	sess.Con = con
 	err = s.copy(params.Writer.WithType(wswriter.WriteOutput), con)
 	if err != nil {
-		message := errorutil.ErrorWrap(fmt.Errorf("could not send result of compilation with command %q", containerConf.ExecutionCmd), "could not execute program")
-		log.Println(errorutil.ErrorWrap(err, message.Error()))
-		return message
+		message := fmt.Sprintf("could not send result of compilation with command %q", containerConf.ExecutionCmd)
+		errorSlug := errorutil.ErrorSlug()
+		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
+		return errorutil.ErrorWrap(errorSlug, message)
 	}
 	return nil
 }

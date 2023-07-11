@@ -16,27 +16,31 @@ func (s *Service) ExecuteCheck(ctx context.Context, cmdID string, params CheckPa
 	testResults := make([]*model.TestResponseData, 0)
 	containerConf, containerID, err := s.getContainer(ctx, cmdID, params.SessionKey)
 	if err != nil {
-		message := errorutil.ErrorWrap(err, "could not test program")
-		log.Println(message)
-		return nil, message
+		message := "could not create sandbox environment"
+		errorSlug := errorutil.ErrorSlug()
+		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
+		return nil, errorutil.ErrorWrap(errorSlug, message)
 	}
 	err = s.ContainerService.CopyToContainer(ctx, containerID, params.Files)
 	if err != nil {
-		message := errorutil.ErrorWrap(fmt.Errorf("could not add files to sandbox environment"), "could not test program")
-		log.Println(errorutil.ErrorWrap(err, message.Error()))
-		return nil, message
+		message := "could not add files to sandbox environment"
+		errorSlug := errorutil.ErrorSlug()
+		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
+		return nil, errorutil.ErrorWrap(errorSlug, message)
 	}
 	err = s.compile(ctx, containerID, containerConf, params.Writer)
 	if err != nil {
-		message := errorutil.ErrorWrap(fmt.Errorf("could not compile program with command %q", containerConf.CompilationCmd), "could not test program")
-		log.Println(errorutil.ErrorWrap(err, message.Error()))
-		return nil, message
+		message := fmt.Sprintf("could not compile program with command %q", containerConf.CompilationCmd)
+		errorSlug := errorutil.ErrorSlug()
+		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
+		return nil, errorutil.ErrorWrap(errorSlug, message)
 	}
 	sess, err := session.GetSession(params.SessionKey)
 	if err != nil {
-		message := errorutil.ErrorWrap(fmt.Errorf("could not retreive user session with key %q", params.SessionKey), "could not test program")
-		log.Println(errorutil.ErrorWrap(err, message.Error()))
-		return nil, message
+		message := fmt.Sprintf("could not retreive user session with key %q", params.SessionKey)
+		errorSlug := errorutil.ErrorSlug()
+		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
+		return nil, errorutil.ErrorWrap(errorSlug, message)
 	}
 	var errors = make([]string, 0)
 	for _, test := range params.Tests {
@@ -44,9 +48,10 @@ func (s *Service) ExecuteCheck(ctx context.Context, cmdID string, params CheckPa
 		case "output":
 			testResult, _ := s.outputTest(ctx, sess, containerConf.ExecutionCmd, test, params)
 			if err != nil {
-				message := errorutil.ErrorWrap(fmt.Errorf("could not execute test with command %q", containerConf.ExecutionCmd), "could not test program")
-				log.Println(errorutil.ErrorWrap(err, message.Error()))
-				errors = append(errors, message.Error())
+				message := fmt.Sprintf("could not execute test with command %q", containerConf.ExecutionCmd)
+				errorSlug := errorutil.ErrorSlug()
+				log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
+				errors = append(errors, errorutil.ErrorWrap(errorSlug, message).Error())
 				continue
 			}
 			testResults = append(
@@ -56,9 +61,10 @@ func (s *Service) ExecuteCheck(ctx context.Context, cmdID string, params CheckPa
 		case "file":
 			testResult, _ := s.fileTest(ctx, sess, containerConf.ExecutionCmd, test, params)
 			if err != nil {
-				message := errorutil.ErrorWrap(fmt.Errorf("could not execute test with command %q", containerConf.ExecutionCmd), "could not test program")
-				log.Println(errorutil.ErrorWrap(err, message.Error()))
-				errors = append(errors, message.Error())
+				message := fmt.Sprintf("could not execute test with command %q", containerConf.ExecutionCmd)
+				errorSlug := errorutil.ErrorSlug()
+				log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
+				errors = append(errors, errorutil.ErrorWrap(errorSlug, message).Error())
 				continue
 			}
 			testResults = append(

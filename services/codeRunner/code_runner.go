@@ -52,7 +52,7 @@ func NewService(ctx context.Context, containerService ContainerService, schedule
 			//pulling images of config file
 			err := s.ContainerService.PullImage(ctx, cc.Image, &buf)
 			if err != nil {
-				log.Println(errorutil.ErrorWrap(err, fmt.Sprintf("could not pull container image %s", cc.Image)))
+				log.Fatalf(errorutil.ErrorWrap(err, fmt.Sprintf("could not pull container image %s", cc.Image)).Error())
 			}
 			//reserving reservedContainers
 			if cc.ReserveContainerAmount > 0 {
@@ -130,9 +130,7 @@ func (s *Service) getContainer(ctx context.Context, cmdID string, sessionKey str
 			var err error
 			containerID, err = s.ContainerService.CreateAndStartContainer(ctx, containerConf.Image)
 			if err != nil {
-				message := "could not create sandbox environment"
-				log.Println(errorutil.ErrorWrap(err, message))
-				return nil, "", fmt.Errorf(message)
+				return nil, "", err
 			}
 			func() {
 				s.Lock()
@@ -142,9 +140,7 @@ func (s *Service) getContainer(ctx context.Context, cmdID string, sessionKey str
 		}
 		err := s.ContainerService.CopyResourcesToContainer(ctx, containerID, containerConf.Add)
 		if err != nil {
-			message := "could not create necessary files in sandbox environment"
-			log.Println(errorutil.ErrorWrap(err, message))
-			return nil, "", fmt.Errorf(message)
+			return nil, "", err
 		}
 	}
 	sess = session.PutSession(sessionKey, &session.Session{ContainerID: containerID, CmdID: containerConf.ID, Updated: time.Now()})

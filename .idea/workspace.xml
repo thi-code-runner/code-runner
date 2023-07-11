@@ -5,19 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="92bafd55-f7e1-4d2c-ac68-e22b7983305a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/services/codeRunner/code_runner_execute_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/scheduler/scheduler_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/session/session_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network/wswriter/wswriter.go" beforeDir="false" afterPath="$PROJECT_DIR$/network/wswriter/wswriter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/error_util/error.go" beforeDir="false" afterPath="$PROJECT_DIR$/error_util/error.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/code_runner.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner_check.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/code_runner_check.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/copy.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/copy.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/container/container_copy.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/container_copy.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/container/container_exec.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/container_exec.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/container/container_start.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/container_start.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/session/session.go" beforeDir="false" afterPath="$PROJECT_DIR$/session/session.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner_execute.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/code_runner_execute.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,7 +170,7 @@
       <option name="presentableId" value="Default" />
       <updated>1687780674041</updated>
       <workItem from="1687780675616" duration="67475000" />
-      <workItem from="1689001860039" duration="22274000" />
+      <workItem from="1689001860039" duration="24417000" />
     </task>
     <task id="LOCAL-00001" summary="enable stdin passing from websocket connection">
       <created>1688410773989</created>
@@ -229,7 +221,14 @@
       <option name="project" value="LOCAL" />
       <updated>1689022956085</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="add some unit tests">
+      <created>1689095498633</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1689095498633</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -244,7 +243,8 @@
     <MESSAGE value="add unit test capabilities" />
     <MESSAGE value="add job scheduler and cleanup jobs" />
     <MESSAGE value="code_runner_execute.go error handling and start error handling for code_runner_check.go" />
-    <option name="LAST_COMMIT_MESSAGE" value="code_runner_execute.go error handling and start error handling for code_runner_check.go" />
+    <MESSAGE value="add some unit tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="add some unit tests" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
