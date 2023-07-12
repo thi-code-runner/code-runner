@@ -7,12 +7,13 @@ import (
 	"context"
 	"fmt"
 	"github.com/docker/docker/api/types"
+	"io"
 	"time"
 )
 
 func (cs *Service) CopyToContainer(ctx context.Context, id string, files []*model.SourceFile) error {
 	if len(id) <= 0 {
-		return fmt.Errorf("could not copy files into docker container because of empty id argumetn")
+		return fmt.Errorf("could not copy files into docker container because of empty id argument")
 	}
 	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
 	defer cancel()
@@ -42,4 +43,16 @@ func (cs *Service) CopyResourcesToContainer(ctx context.Context, id string, reso
 		}
 	}
 	return nil
+}
+func (cs *Service) CopyFromContainer(ctx context.Context, id string, path string) (io.Reader, error) {
+	if len(id) <= 0 {
+		return nil, fmt.Errorf("could not copy files from docker container because of empty id argument")
+	}
+	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
+	defer cancel()
+	r, _, err := cs.cli.CopyFromContainer(ctx, id, path)
+	if err != nil {
+		return nil, errorutil.ErrorWrap(err, fmt.Sprintf("could not copy files from docker container %q", id))
+	}
+	return r, nil
 }

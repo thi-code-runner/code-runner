@@ -1,10 +1,8 @@
-package codeRunner
+package check
 
 import (
 	errorutil "code-runner/error_util"
 	"code-runner/model"
-	"code-runner/network/wswriter"
-	"code-runner/services/container"
 	"code-runner/session"
 	"context"
 	"fmt"
@@ -12,23 +10,23 @@ import (
 	"strings"
 )
 
-func (s *Service) ExecuteCheck(ctx context.Context, cmdID string, params CheckParams) ([]*model.TestResponseData, error) {
+func Check(ctx context.Context, cmdID string, params CheckParams) ([]*model.TestResponseData, error) {
 	testResults := make([]*model.TestResponseData, 0)
-	containerConf, containerID, err := s.getContainer(ctx, cmdID, params.SessionKey)
+	containerConf, containerID, err := params.CodeRunner.GetContainer(ctx, cmdID, params.SessionKey)
 	if err != nil {
 		message := "could not create sandbox environment"
 		errorSlug := errorutil.ErrorSlug()
 		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
 		return nil, errorutil.ErrorWrap(errorSlug, message)
 	}
-	err = s.ContainerService.CopyToContainer(ctx, containerID, params.Files)
+	err = params.CodeRunner.ContainerService.CopyToContainer(ctx, containerID, params.Files)
 	if err != nil {
 		message := "could not add files to sandbox environment"
 		errorSlug := errorutil.ErrorSlug()
 		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
 		return nil, errorutil.ErrorWrap(errorSlug, message)
 	}
-	err = s.compile(ctx, containerID, containerConf, params.Writer)
+	err = params.CodeRunner.Compile(ctx, containerID, containerConf, params.Writer)
 	if err != nil {
 		message := fmt.Sprintf("could not compile program with command %q", containerConf.CompilationCmd)
 		errorSlug := errorutil.ErrorSlug()
@@ -46,7 +44,7 @@ func (s *Service) ExecuteCheck(ctx context.Context, cmdID string, params CheckPa
 	for _, test := range params.Tests {
 		switch test.Type {
 		case "output":
-			testResult, _ := s.outputTest(ctx, sess, containerConf.ExecutionCmd, test, params)
+			testResult, _ := outputTest(ctx, sess, containerConf.ExecutionCmd, test, params)
 			if err != nil {
 				message := fmt.Sprintf("could not execute test with command %q", containerConf.ExecutionCmd)
 				errorSlug := errorutil.ErrorSlug()
@@ -59,7 +57,7 @@ func (s *Service) ExecuteCheck(ctx context.Context, cmdID string, params CheckPa
 				testResult,
 			)
 		case "file":
-			testResult, _ := s.fileTest(ctx, sess, containerConf.ExecutionCmd, test, params)
+			testResult, _ := fileTest(ctx, sess, containerConf.ExecutionCmd, test, params)
 			if err != nil {
 				message := fmt.Sprintf("could not execute test with command %q", containerConf.ExecutionCmd)
 				errorSlug := errorutil.ErrorSlug()
@@ -78,34 +76,4 @@ func (s *Service) ExecuteCheck(ctx context.Context, cmdID string, params CheckPa
 		return nil, fmt.Errorf(strings.Join(errors, "\n\n"))
 	}
 	return testResults, nil
-}
-func (s *Service) outputTest(ctx context.Context, sess *session.Session, executionCmd string, test *model.TestConfiguration, params CheckParams) (*model.TestResponseData, error) {
-	con, _, err := s.ContainerService.RunCommand(ctx, sess.ContainerID, container.RunCommandParams{Cmd: executionCmd})
-	defer con.Close()
-	sess.Con = con
-	err = s.copy(params.Writer.WithType(wswriter.WriteOutput), con)
-	if err != nil {
-		return nil, errorutil.ErrorWrap(err, "execution failed")
-	}
-	if string(params.Writer.GetOutput()) == test.Param["expected"] {
-		return &model.TestResponseData{Test: test, Passed: true}, nil
-	}
-	return &model.TestResponseData{Test: test, Message: fmt.Sprintf("output test failed: expected: %q, actual: %q\n", test.Param["expected"], params.Writer.GetOutput()), Passed: false}, nil
-}
-func (s *Service) fileTest(ctx context.Context, sess *session.Session, executionCmd string, test *model.TestConfiguration, params CheckParams) (*model.TestResponseData, error) {
-	con, executionID, err := s.ContainerService.RunCommand(ctx, sess.ContainerID, container.RunCommandParams{Cmd: executionCmd})
-	defer con.Close()
-	sess.Con = con
-	err = s.copy(params.Writer.WithType(wswriter.WriteOutput), con)
-	if err != nil {
-		return nil, errorutil.ErrorWrap(err, "execution failed")
-	}
-	code, err := s.ContainerService.GetReturnCode(ctx, executionID)
-	if err != nil {
-		return nil, err
-	}
-	if code != 0 {
-		return &model.TestResponseData{Test: test, Message: fmt.Sprintf("file test failed with error code %d", code), Passed: false}, nil
-	}
-	return &model.TestResponseData{Test: test, Message: "", Passed: true}, nil
 }

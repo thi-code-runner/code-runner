@@ -5,6 +5,9 @@ import (
 	"code-runner/model"
 	"code-runner/network/wswriter"
 	"code-runner/services/codeRunner"
+	"code-runner/services/codeRunner/check"
+	"code-runner/services/codeRunner/input"
+	"code-runner/services/codeRunner/run"
 	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
@@ -41,13 +44,7 @@ func (s *Server) Run() {
 func (s *Server) initRoutes() {
 	s.mux.HandleFunc("/run", func(w http.ResponseWriter, r *http.Request) {
 		var sessionKey string
-		ses, err := r.Cookie("code-runner-session")
-		if err != nil {
-			sessionKey = uuid.New().String()
-			w.Header().Set("Set-Cookie", fmt.Sprintf("code-runner-session=%s", sessionKey))
-		} else {
-			sessionKey = ses.Value
-		}
+		sessionKey = uuid.New().String()
 		c, err := websocket.Accept(w, r, nil)
 		if err != nil {
 			w.WriteHeader(426)
@@ -82,10 +79,10 @@ func (s *Server) initRoutes() {
 					}
 					data := runRequest.Data
 					wsWriter := wswriter.NewWriter(c, wswriter.WriteOutput)
-					err := s.CodeRunner.Execute(
+					err := run.Run(
 						r.Context(),
 						data.Cmd,
-						codeRunner.ExecuteParams{SessionKey: sessionKey, Writer: wsWriter, Files: data.Sourcefiles, MainFile: data.Mainfilename},
+						run.ExecuteParams{SessionKey: sessionKey, Writer: wsWriter, Files: data.Sourcefiles, MainFile: data.Mainfilename, CodeRunner: s.CodeRunner},
 					)
 					if err != nil {
 						wsWriter.WithType(wswriter.WriteError).Write([]byte(errorutil.ErrorWrap(err, "code-runner failed\n\trexecute/run failed").Error()))
@@ -103,7 +100,7 @@ func (s *Server) initRoutes() {
 						log.Println(err)
 						return
 					}
-					err := s.CodeRunner.SendStdIn(r.Context(), stdinRequest.Stdin, sessionKey)
+					err := input.Input(r.Context(), stdinRequest.Stdin, sessionKey)
 					if err != nil {
 						wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(errorutil.ErrorWrap(err, "code-runner failed\n\trexecute/input failed").Error()))
 						return
@@ -120,11 +117,11 @@ func (s *Server) initRoutes() {
 						return
 					}
 					wsWriter := wswriter.NewWriter(c, wswriter.WriteOutput)
-					testResults, err := s.CodeRunner.ExecuteCheck(
+					testResults, err := check.Check(
 						r.Context(),
 						testRequest.Data.Cmd,
-						codeRunner.CheckParams{ExecuteParams: codeRunner.ExecuteParams{Writer: wsWriter, SessionKey: sessionKey, Files: testRequest.Data.Sourcefiles},
-							Tests: testRequest.Data.Tests},
+						check.CheckParams{Writer: wsWriter, SessionKey: sessionKey, Files: testRequest.Data.Sourcefiles,
+							Tests: testRequest.Data.Tests, CodeRunner: s.CodeRunner},
 					)
 
 					if err != nil {

@@ -4,7 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="92bafd55-f7e1-4d2c-ac68-e22b7983305a" name="Changes" comment="gracefully disconnect websocket" />
+    <list default="true" id="92bafd55-f7e1-4d2c-ac68-e22b7983305a" name="Changes" comment="gracefully disconnect websocket">
+      <change afterPath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/codeRunner/check/file_check.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/codeRunner/check/output_check.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/codeRunner/check/params.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/codeRunner/run/params.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/code_runner.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner_check.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/check.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner_execute.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/run/run.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner_execute_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/run/run_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner_shutdown.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner_stdin.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/input/input.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/copy.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/params.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/container/container_copy.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/container_copy.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/scheduler/scheduler_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/scheduler/scheduler_test.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,11 +80,11 @@
       <recent name="$PROJECT_DIR$/resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/services/codeRunner/input" />
+      <recent name="$PROJECT_DIR$/services/codeRunner/check" />
+      <recent name="$PROJECT_DIR$/services/codeRunner/run" />
       <recent name="$PROJECT_DIR$/services" />
       <recent name="$PROJECT_DIR$/network/netwriter" />
-      <recent name="$PROJECT_DIR$/common" />
-      <recent name="$PROJECT_DIR$/services/container" />
-      <recent name="$PROJECT_DIR$/config" />
     </key>
   </component>
   <component name="RunManager" selected="Go Build.go build code-runner">
@@ -84,40 +105,40 @@
       <filePath value="$PROJECT_DIR$/main.go" />
       <method v="2" />
     </configuration>
-    <configuration name="TestCRSavesReservedContainerInMap in code-runner/services/codeRunner" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestJunitExtractor in code-runner/services/codeRunner/check/extractor" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="code-runner" />
-      <working_directory value="$PROJECT_DIR$/services/codeRunner" />
+      <working_directory value="$PROJECT_DIR$/services/codeRunner/check/extractor" />
       <root_directory value="$PROJECT_DIR$" />
       <kind value="PACKAGE" />
-      <package value="code-runner/services/codeRunner" />
+      <package value="code-runner/services/codeRunner/check/extractor" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestCRSavesReservedContainerInMap\E$" />
+      <pattern value="^\QTestJunitExtractor\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestDeleteSession in code-runner/session" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestJunitExtractorIncorrectReport in code-runner/services/codeRunner/check/extractor" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="code-runner" />
-      <working_directory value="$PROJECT_DIR$/session" />
+      <working_directory value="$PROJECT_DIR$/services/codeRunner/check/extractor" />
       <root_directory value="$PROJECT_DIR$" />
       <kind value="PACKAGE" />
-      <package value="code-runner/session" />
+      <package value="code-runner/services/codeRunner/check/extractor" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestDeleteSession\E$" />
+      <pattern value="^\QTestJunitExtractorIncorrectReport\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestGetSessions in code-runner/session" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestScheduler_AddJob in code-runner/services/scheduler" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="code-runner" />
-      <working_directory value="$PROJECT_DIR$/session" />
+      <working_directory value="$PROJECT_DIR$/services/scheduler" />
       <root_directory value="$PROJECT_DIR$" />
       <kind value="PACKAGE" />
-      <package value="code-runner/session" />
+      <package value="code-runner/services/scheduler" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestGetSessions\E$" />
+      <pattern value="^\QTestScheduler_AddJob\E$" />
       <method v="2" />
     </configuration>
     <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
@@ -140,18 +161,18 @@
     </configuration>
     <list>
       <item itemvalue="Go Build.go build code-runner" />
+      <item itemvalue="Go Test.TestJunitExtractor in code-runner/services/codeRunner/check/extractor" />
+      <item itemvalue="Go Test.TestJunitExtractorIncorrectReport in code-runner/services/codeRunner/check/extractor" />
+      <item itemvalue="Go Test.TestScheduler_AddJob in code-runner/services/scheduler" />
       <item itemvalue="Go Test.go test code-runner" />
-      <item itemvalue="Go Test.TestCRSavesReservedContainerInMap in code-runner/services/codeRunner" />
-      <item itemvalue="Go Test.TestDeleteSession in code-runner/session" />
-      <item itemvalue="Go Test.TestGetSessions in code-runner/session" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build code-runner" />
+        <item itemvalue="Go Test.TestJunitExtractor in code-runner/services/codeRunner/check/extractor" />
+        <item itemvalue="Go Test.TestJunitExtractorIncorrectReport in code-runner/services/codeRunner/check/extractor" />
+        <item itemvalue="Go Test.TestScheduler_AddJob in code-runner/services/scheduler" />
         <item itemvalue="Go Test.go test code-runner" />
-        <item itemvalue="Go Test.TestCRSavesReservedContainerInMap in code-runner/services/codeRunner" />
-        <item itemvalue="Go Test.TestGetSessions in code-runner/session" />
-        <item itemvalue="Go Test.TestDeleteSession in code-runner/session" />
       </list>
     </recent_temporary>
   </component>
@@ -248,5 +269,7 @@
     <SUITE FILE_PATH="coverage/code_runner$TestCRSavesContainerInSession_in_code_runner_services_codeRunner.out" NAME="TestCRSavesContainerInSession in code-runner/services/codeRunner Coverage Results" MODIFIED="1689082052506" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/code_runner$go_test_code_runner_services_codeRunner.out" NAME="go test code-runner/services/codeRunner Coverage Results" MODIFIED="1689084376793" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/code_runner$go_test_code_runner.out" NAME="go test code-runner Coverage Results" MODIFIED="1689084984779" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/code_runner$TestJunitExtractor_in_code_runner_services_codeRunner_check_extractor.out" NAME="TestJunitExtractor in code-runner/services/codeRunner/check/extractor Coverage Results" MODIFIED="1689171047947" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/code_runner$TestJunitExtractorIncorrectReport_in_code_runner_services_codeRunner_check_extractor.out" NAME="TestJunitExtractorIncorrectReport in code-runner/services/codeRunner/check/extractor Coverage Results" MODIFIED="1689171351207" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

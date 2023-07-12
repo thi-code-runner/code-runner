@@ -1,8 +1,9 @@
-package codeRunner
+package run
 
 import (
 	"code-runner/model"
 	"code-runner/network/wswriter"
+	"code-runner/services/codeRunner"
 )
 
 type ExecuteParams struct {
@@ -10,9 +11,5 @@ type ExecuteParams struct {
 	SessionKey string
 	Files      []*model.SourceFile
 	MainFile   string
-}
-
-type CheckParams struct {
-	ExecuteParams
-	Tests []*model.TestConfiguration
+	CodeRunner *codeRunner.Service
 }

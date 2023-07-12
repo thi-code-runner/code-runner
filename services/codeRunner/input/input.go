@@ -1,4 +1,4 @@
-package codeRunner
+package input
 
 import (
 	"code-runner/session"
@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-func (s *Service) SendStdIn(ctx context.Context, stdin string, sessionKey string) error {
+func Input(ctx context.Context, stdin string, sessionKey string) error {
 	var err error
 	sess, err := session.GetSession(sessionKey)
 	if err != nil || sess.Con == nil {

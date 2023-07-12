@@ -5,6 +5,7 @@ import (
 	"code-runner/config"
 	errorutil "code-runner/error_util"
 	"code-runner/model"
+	"code-runner/network/wswriter"
 	"code-runner/services/container"
 	"code-runner/services/scheduler"
 	"code-runner/session"
@@ -98,7 +99,7 @@ func NewService(ctx context.Context, containerService ContainerService, schedule
 	})
 	return s
 }
-func (s *Service) getContainer(ctx context.Context, cmdID string, sessionKey string) (*config.ContainerConfig, string, error) {
+func (s *Service) GetContainer(ctx context.Context, cmdID string, sessionKey string) (*config.ContainerConfig, string, error) {
 	var containerConf config.ContainerConfig
 	for _, c := range config.Conf.ContainerConfig {
 		if cmdID == c.ID {
@@ -145,4 +146,45 @@ func (s *Service) getContainer(ctx context.Context, cmdID string, sessionKey str
 	}
 	sess = session.PutSession(sessionKey, &session.Session{ContainerID: containerID, CmdID: containerConf.ID, Updated: time.Now()})
 	return &containerConf, containerID, nil
+}
+func (s *Service) Compile(ctx context.Context, containerID string, containerConf *config.ContainerConfig, writer wswriter.Writer) error {
+	if len(containerConf.CompilationCmd) > 0 {
+		con, _, err := s.ContainerService.RunCommand(ctx, containerID, container.RunCommandParams{Cmd: containerConf.CompilationCmd})
+		if err != nil {
+			return err
+		}
+		defer con.Close()
+		err = s.Copy(writer.WithType(wswriter.WriteOutput), con)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func (s *Service) Shutdown(ctx context.Context) {
+	for _, v := range s.reservedContainers {
+		for _, id := range v {
+			_ = s.ContainerService.ContainerRemove(ctx, id, container.RemoveCommandParams{Force: true})
+		}
+	}
+	for id := range s.containers {
+		_ = s.ContainerService.ContainerRemove(ctx, id, container.RemoveCommandParams{Force: true})
+	}
+}
+func (s *Service) Copy(w io.Writer, r io.Reader) error {
+	var err error
+	buf := make([]byte, 32*1024)
+	for {
+		n, er := r.Read(buf)
+		if n > 0 {
+			w.Write(buf[0:n])
+		}
+		if er != nil {
+			if er != io.EOF {
+				err = er
+			}
+			break
+		}
+	}
+	return err
 }
