@@ -1,24 +1,22 @@
 package extractor
 
 import (
+	"code-runner/model"
 	"sync"
 )
 
 var extractors = make(map[string]extractor)
 var mu sync.RWMutex
 
-type extractor func(closer string) []Result
-type Result struct {
-	Name    string
-	Class   string
-	Time    string
-	Message string
-}
+type extractor func(closer string) []*model.Detail
 
-func Extract(key string, s string) []Result {
+func Extract(key string, s string) []*model.Detail {
 	mu.RLock()
-	extractor := extractors[key]
+	extractor, ok := extractors[key]
 	mu.RUnlock()
+	if !ok {
+		return make([]*model.Detail, 0)
+	}
 	return extractor(s)
 }
 func addExtractor(key string, extractor extractor) {

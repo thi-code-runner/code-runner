@@ -57,7 +57,12 @@ func Check(ctx context.Context, cmdID string, params CheckParams) ([]*model.Test
 				testResult,
 			)
 		case "file":
-			testResult, _ := fileTest(ctx, sess, containerConf.ExecutionCmd, test, params)
+			var fileCheckParams FileCheckParams
+			fileCheckParams.CodeRunner = params.CodeRunner
+			fileCheckParams.Writer = params.Writer
+			fileCheckParams.ReportPath = containerConf.ReportPath
+			fileCheckParams.ReportExtractor = containerConf.ReportExtractor
+			testResult, _ := fileTest(ctx, sess, containerConf.ExecutionCmd, containerID, test, fileCheckParams)
 			if err != nil {
 				message := fmt.Sprintf("could not execute test with command %q", containerConf.ExecutionCmd)
 				errorSlug := errorutil.ErrorSlug()

@@ -30,6 +30,7 @@ type ContainerService interface {
 	PullImage(context.Context, string, io.Writer) error
 	ContainerRemove(context.Context, string, container.RemoveCommandParams) error
 	CopyToContainer(context.Context, string, []*model.SourceFile) error
+	CopyFromContainer(context.Context, string, string) (string, error)
 	CopyResourcesToContainer(context.Context, string, []string) error
 	GetReturnCode(context.Context, string) (int, error)
 	GetContainers(context.Context) ([]string, error)

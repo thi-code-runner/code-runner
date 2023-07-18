@@ -19,6 +19,8 @@ type ContainerConfig struct {
 	ExecutionCmd           string   `json:"executionCmd"`
 	ReserveContainerAmount int      `json:"reserveContainerAmount"`
 	Add                    []string `json:"add"`
+	ReportPath             string   `json:"reportPath"`
+	ReportExtractor        string   `json:"reportExtractor"`
 }
 
 type Config struct {

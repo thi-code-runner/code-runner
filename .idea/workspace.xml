@@ -4,27 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="92bafd55-f7e1-4d2c-ac68-e22b7983305a" name="Changes" comment="gracefully disconnect websocket">
-      <change afterPath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/codeRunner/check/file_check.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/codeRunner/check/output_check.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/codeRunner/check/params.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/codeRunner/run/params.go" afterDir="false" />
+    <list default="true" id="92bafd55-f7e1-4d2c-ac68-e22b7983305a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/test_response.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/test_response.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/check.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/check.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/file_check.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/file_check.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/params.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/params.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/code_runner.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner_check.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/check.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner_execute.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/run/run.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner_execute_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/run/run_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner_shutdown.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner_stdin.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/input/input.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/copy.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/params.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/services/container/container_copy.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/container_copy.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/scheduler/scheduler_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/scheduler/scheduler_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +79,7 @@
       <recent name="$PROJECT_DIR$/network/netwriter" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build code-runner">
+  <component name="RunManager" selected="Go Test.TestJunitExtractor in code-runner/services/codeRunner/check/extractor">
     <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="code-runner" />
       <working_directory value="$PROJECT_DIR$" />
@@ -168,8 +160,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Build.go build code-runner" />
         <item itemvalue="Go Test.TestJunitExtractor in code-runner/services/codeRunner/check/extractor" />
+        <item itemvalue="Go Build.go build code-runner" />
         <item itemvalue="Go Test.TestJunitExtractorIncorrectReport in code-runner/services/codeRunner/check/extractor" />
         <item itemvalue="Go Test.TestScheduler_AddJob in code-runner/services/scheduler" />
         <item itemvalue="Go Test.go test code-runner" />
@@ -244,11 +236,29 @@
       <option name="project" value="LOCAL" />
       <updated>1689095498633</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="add extractor and refactor to smaller packages">
+      <created>1689172831592</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1689172831592</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
@@ -260,10 +270,18 @@
     <MESSAGE value="add job scheduler and cleanup jobs" />
     <MESSAGE value="code_runner_execute.go error handling and start error handling for code_runner_check.go" />
     <MESSAGE value="add some unit tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="add some unit tests" />
+    <MESSAGE value="add extractor and refactor to smaller packages" />
+    <option name="LAST_COMMIT_MESSAGE" value="add extractor and refactor to smaller packages" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint type="DlvErrorBreakpoint" />
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/code_runner$TestCRSavesContainerInSession_in_code_runner_services_codeRunner.out" NAME="TestCRSavesContainerInSession in code-runner/services/codeRunner Coverage Results" MODIFIED="1689082052506" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

@@ -13,3 +13,9 @@ type CheckParams struct {
 	CodeRunner *codeRunner.Service
 	Tests      []*model.TestConfiguration
 }
+
+type FileCheckParams struct {
+	CheckParams
+	ReportPath      string
+	ReportExtractor string
+}

@@ -9,4 +9,11 @@ type TestResponseData struct {
 	Test    *TestConfiguration `json:"test"`
 	Message string             `json:"message"`
 	Passed  bool               `json:"passed"`
+	Detail  []*Detail          `json:"detail"`
+}
+type Detail struct {
+	Name    string
+	Class   string
+	Time    string
+	Message string
 }

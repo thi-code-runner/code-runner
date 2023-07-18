@@ -44,15 +44,19 @@ func (cs *Service) CopyResourcesToContainer(ctx context.Context, id string, reso
 	}
 	return nil
 }
-func (cs *Service) CopyFromContainer(ctx context.Context, id string, path string) (io.Reader, error) {
+func (cs *Service) CopyFromContainer(ctx context.Context, id string, path string) (string, error) {
 	if len(id) <= 0 {
-		return nil, fmt.Errorf("could not copy files from docker container because of empty id argument")
+		return "", fmt.Errorf("could not copy files from docker container because of empty id argument")
 	}
 	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
 	defer cancel()
 	r, _, err := cs.cli.CopyFromContainer(ctx, id, path)
 	if err != nil {
-		return nil, errorutil.ErrorWrap(err, fmt.Sprintf("could not copy files from docker container %q", id))
+		return "", errorutil.ErrorWrap(err, fmt.Sprintf("could not copy files from docker container %q", id))
 	}
-	return r, nil
+	result, err := io.ReadAll(r)
+	if err != nil {
+		return "", err
+	}
+	return string(result), nil
 }
