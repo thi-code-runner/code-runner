@@ -1,4 +1,6 @@
 {
+  "hostCleanupIntervalS": 360,
+  "cacheCleanupIntervalS": 180,
   "containerConfig": [
     {
       "id": "java-20",

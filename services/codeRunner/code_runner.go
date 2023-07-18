@@ -71,7 +71,7 @@ func NewService(ctx context.Context, containerService ContainerService, schedule
 			}
 		}
 		io.Copy(os.Stdout, &buf)
-		s.SchedulerService.AddJob(&scheduler.Job{D: 30 * time.Second, Apply: func() {
+		s.SchedulerService.AddJob(&scheduler.Job{D: time.Duration(config.Conf.CacheCleanupIntervalS) * time.Second, Apply: func() {
 			//Cleans up containers present in code-runner but not actually running on host system
 			actualContainers, _ := s.ContainerService.GetContainers(ctx)
 			actualContainerMap := make(map[string]struct{})
@@ -84,7 +84,7 @@ func NewService(ctx context.Context, containerService ContainerService, schedule
 				}
 			}
 		}})
-		s.SchedulerService.AddJob(&scheduler.Job{D: time.Minute, Apply: func() {
+		s.SchedulerService.AddJob(&scheduler.Job{D: time.Duration(config.Conf.HostCleanupIntervalS) * time.Second, Apply: func() {
 			//clean up sessions and associated containers after a certain time of no usage
 			for k, v := range session.GetSessions() {
 				if v.Updated.Add(90 * time.Minute).Before(time.Now()) {

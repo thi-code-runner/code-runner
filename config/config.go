@@ -24,7 +24,9 @@ type ContainerConfig struct {
 }
 
 type Config struct {
-	ContainerConfig []ContainerConfig `json:"containerConfig"`
+	ContainerConfig       []ContainerConfig `json:"containerConfig"`
+	HostCleanupIntervalS  int64             `json:"hostCleanupIntervalMs"`
+	CacheCleanupIntervalS int64             `json:"cacheCleanupIntervalMs"`
 }
 
 func NewConfigManager(path string) *ConfigManager {
