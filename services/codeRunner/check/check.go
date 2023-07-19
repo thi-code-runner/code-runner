@@ -45,7 +45,7 @@ func Check(ctx context.Context, cmdID string, params CheckParams) ([]*model.Test
 	for _, test := range params.Tests {
 		switch test.Type {
 		case "output":
-			cmd, err := params.CodeRunner.TransformCommand(containerConf.ExecutionCmd, codeRunner.TransformParams{FileName: test.Param["filename"]})
+			cmd, err := params.CodeRunner.TransformCommand(containerConf.ExecutionCmd, codeRunner.TransformParams{FileName: params.MainFile})
 			if err != nil {
 				message := fmt.Sprintf("could not execute test of type %s", test.Type)
 				errorSlug := errorutil.ErrorSlug()

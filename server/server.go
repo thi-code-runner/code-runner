@@ -120,7 +120,7 @@ func (s *Server) initRoutes() {
 					testResults, err := check.Check(
 						r.Context(),
 						testRequest.Data.Cmd,
-						check.CheckParams{Writer: wsWriter, SessionKey: sessionKey, Files: testRequest.Data.Sourcefiles,
+						check.CheckParams{Writer: wsWriter, SessionKey: sessionKey, MainFile: testRequest.Data.Mainfilename, Files: testRequest.Data.Sourcefiles,
 							Tests: testRequest.Data.Tests, CodeRunner: s.CodeRunner},
 					)
 

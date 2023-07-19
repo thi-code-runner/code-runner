@@ -12,6 +12,7 @@ type CheckParams struct {
 	Files      []*model.SourceFile
 	CodeRunner *codeRunner.Service
 	Tests      []*model.TestConfiguration
+	MainFile   string
 }
 
 type FileCheckParams struct {

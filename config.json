@@ -6,7 +6,7 @@
       "id": "java-20",
       "image": "eclipse-temurin:20-jdk",
       "compilationCmd": "javac *.java",
-      "executionCmd": "java Main",
+      "executionCmd": "java {{getSubstringUntil .FileName \".\"}}",
       "reserveContainerAmount": 0
     },
     {
