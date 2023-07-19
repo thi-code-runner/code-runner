@@ -5,17 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="92bafd55-f7e1-4d2c-ac68-e22b7983305a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/services/codeRunner/code_runner_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/test_response.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/test_response.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/codeRunner/check/check.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/check.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/codeRunner/check/file_check.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/file_check.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/params.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/params.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/code_runner.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/run/run.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/run/run.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/container/container_copy.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/container_copy.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -30,7 +27,7 @@
       </list>
     </option>
   </component>
-  <component name="GOROOT" url="file:///usr/lib/go" />
+  <component name="GOROOT" url="file://$USER_HOME$/go/go1.20.3" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -79,7 +76,7 @@
       <recent name="$PROJECT_DIR$/network/netwriter" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Test.TestJunitExtractor in code-runner/services/codeRunner/check/extractor">
+  <component name="RunManager" selected="Go Build.go build code-runner">
     <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="code-runner" />
       <working_directory value="$PROJECT_DIR$" />
@@ -133,16 +130,19 @@
       <pattern value="^\QTestScheduler_AddJob\E$" />
       <method v="2" />
     </configuration>
-    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+    <configuration name="TestTemplate in code-runner/services/codeRunner" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="code-runner" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="DIRECTORY" />
+      <working_directory value="$PROJECT_DIR$/services/codeRunner" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="code-runner/services/codeRunner" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
+      <pattern value="^\QTestTemplate\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="go test code-runner" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
       <module name="code-runner" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="DIRECTORY" />
@@ -153,18 +153,18 @@
     </configuration>
     <list>
       <item itemvalue="Go Build.go build code-runner" />
+      <item itemvalue="Go Test.TestTemplate in code-runner/services/codeRunner" />
       <item itemvalue="Go Test.TestJunitExtractor in code-runner/services/codeRunner/check/extractor" />
       <item itemvalue="Go Test.TestJunitExtractorIncorrectReport in code-runner/services/codeRunner/check/extractor" />
       <item itemvalue="Go Test.TestScheduler_AddJob in code-runner/services/scheduler" />
-      <item itemvalue="Go Test.go test code-runner" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.TestJunitExtractor in code-runner/services/codeRunner/check/extractor" />
         <item itemvalue="Go Build.go build code-runner" />
+        <item itemvalue="Go Test.TestTemplate in code-runner/services/codeRunner" />
+        <item itemvalue="Go Test.TestJunitExtractor in code-runner/services/codeRunner/check/extractor" />
         <item itemvalue="Go Test.TestJunitExtractorIncorrectReport in code-runner/services/codeRunner/check/extractor" />
         <item itemvalue="Go Test.TestScheduler_AddJob in code-runner/services/scheduler" />
-        <item itemvalue="Go Test.go test code-runner" />
       </list>
     </recent_temporary>
   </component>
@@ -179,6 +179,7 @@
       <workItem from="1687780675616" duration="67475000" />
       <workItem from="1689001860039" duration="24417000" />
       <workItem from="1689105041932" duration="2337000" />
+      <workItem from="1689776088390" duration="1875000" />
     </task>
     <task id="LOCAL-00001" summary="enable stdin passing from websocket connection">
       <created>1688410773989</created>
@@ -243,7 +244,21 @@
       <option name="project" value="LOCAL" />
       <updated>1689172831592</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="implement extractors in file tests. More validation needed">
+      <created>1689694485748</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1689694485748</updated>
+    </task>
+    <task id="LOCAL-00011" summary="add schedule durations to config file">
+      <created>1689695210576</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1689695210576</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -271,13 +286,27 @@
     <MESSAGE value="code_runner_execute.go error handling and start error handling for code_runner_check.go" />
     <MESSAGE value="add some unit tests" />
     <MESSAGE value="add extractor and refactor to smaller packages" />
-    <option name="LAST_COMMIT_MESSAGE" value="add extractor and refactor to smaller packages" />
+    <MESSAGE value="implement extractors in file tests. More validation needed" />
+    <MESSAGE value="add schedule durations to config file" />
+    <option name="LAST_COMMIT_MESSAGE" value="add schedule durations to config file" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit_test.go</url>
+          <line>17</line>
+          <option name="timeStamp" value="65" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit_test.go</url>
+          <line>20</line>
+          <option name="timeStamp" value="66" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="DlvErrorBreakpoint" />
       </default-breakpoints>

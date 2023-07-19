@@ -15,6 +15,7 @@ func fileTest(ctx context.Context, sess *session.Session, executionCmd string, c
 	var resultData model.TestResponseData
 	resultData.Test = test
 	resultData.Passed = true
+
 	con, executionID, err := params.CodeRunner.ContainerService.RunCommand(ctx, sess.ContainerID, container.RunCommandParams{Cmd: executionCmd})
 	defer con.Close()
 	sess.Con = con
@@ -30,11 +31,9 @@ func fileTest(ctx context.Context, sess *session.Session, executionCmd string, c
 		resultData.Message = fmt.Sprintf("file test failed with error code %d", code)
 		resultData.Passed = false
 	}
-	if len(params.ReportPath) > 0 {
-		report, err := params.CodeRunner.ContainerService.CopyFromContainer(ctx, containerID, params.ReportPath)
-		if err != nil {
-			return nil, err
-		}
+	if len(params.ReportPath) > 0 && len(params.ReportExtractor) > 0 {
+		//We ignore this error so that we just return an empty *Detail slice
+		report, _ := params.CodeRunner.ContainerService.CopyFromContainer(ctx, containerID, params.ReportPath)
 		resultData.Detail = extractor.Extract(params.ReportExtractor, report)
 	}
 

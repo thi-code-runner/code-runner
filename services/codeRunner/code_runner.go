@@ -11,9 +11,11 @@ import (
 	"code-runner/session"
 	"context"
 	"fmt"
+	"html/template"
 	"io"
 	"log"
 	"os"
+	strings "strings"
 	"sync"
 	"time"
 )
@@ -148,9 +150,9 @@ func (s *Service) GetContainer(ctx context.Context, cmdID string, sessionKey str
 	sess = session.PutSession(sessionKey, &session.Session{ContainerID: containerID, CmdID: containerConf.ID, Updated: time.Now()})
 	return &containerConf, containerID, nil
 }
-func (s *Service) Compile(ctx context.Context, containerID string, containerConf *config.ContainerConfig, writer wswriter.Writer) error {
-	if len(containerConf.CompilationCmd) > 0 {
-		con, _, err := s.ContainerService.RunCommand(ctx, containerID, container.RunCommandParams{Cmd: containerConf.CompilationCmd})
+func (s *Service) Compile(ctx context.Context, containerID string, compilationCmd string, writer wswriter.Writer) error {
+	if len(compilationCmd) > 0 {
+		con, _, err := s.ContainerService.RunCommand(ctx, containerID, container.RunCommandParams{Cmd: compilationCmd})
 		if err != nil {
 			return err
 		}
@@ -188,4 +190,25 @@ func (s *Service) Copy(w io.Writer, r io.Reader) error {
 		}
 	}
 	return err
+}
+
+type TransformParams struct {
+	FileName string
+}
+
+func (s *Service) TransformCommand(cmd string, params TransformParams) (string, error) {
+	tmpl, err := template.New("cmdTemplate").Funcs(template.FuncMap{
+		"getSubstringUntil": func(txt string, delim string) string {
+			return strings.Split(txt, delim)[0]
+		},
+	}).Parse(cmd)
+	if err != nil {
+		return "", err
+	}
+	var buf bytes.Buffer
+	err = tmpl.Execute(&buf, params)
+	if err != nil {
+		return "", err
+	}
+	return buf.String(), nil
 }

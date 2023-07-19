@@ -54,6 +54,7 @@ func (cs *Service) CopyFromContainer(ctx context.Context, id string, path string
 	if err != nil {
 		return "", errorutil.ErrorWrap(err, fmt.Sprintf("could not copy files from docker container %q", id))
 	}
+	defer r.Close()
 	result, err := io.ReadAll(r)
 	if err != nil {
 		return "", err

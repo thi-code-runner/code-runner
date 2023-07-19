@@ -3,6 +3,7 @@ package run
 import (
 	errorutil "code-runner/error_util"
 	"code-runner/network/wswriter"
+	"code-runner/services/codeRunner"
 	"code-runner/services/container"
 	"code-runner/session"
 	"context"
@@ -25,14 +26,21 @@ func Run(ctx context.Context, id string, params ExecuteParams) error {
 		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
 		return errorutil.ErrorWrap(errorSlug, message)
 	}
-	err = params.CodeRunner.Compile(ctx, containerID, containerConf, params.Writer)
+	err = params.CodeRunner.Compile(ctx, containerID, containerConf.CompilationCmd, params.Writer)
 	if err != nil {
 		message := fmt.Sprintf("could not compile program with command %q", containerConf.CompilationCmd)
 		errorSlug := errorutil.ErrorSlug()
 		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
 		return errorutil.ErrorWrap(errorSlug, message)
 	}
-	con, _, err := params.CodeRunner.ContainerService.RunCommand(ctx, containerID, container.RunCommandParams{Cmd: containerConf.ExecutionCmd})
+	cmd, err := params.CodeRunner.TransformCommand(containerConf.ExecutionCmd, codeRunner.TransformParams{FileName: params.MainFile})
+	if err != nil {
+		message := fmt.Sprintf("could not execute program %q", params.MainFile)
+		errorSlug := errorutil.ErrorSlug()
+		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
+		return errorutil.ErrorWrap(errorSlug, message)
+	}
+	con, _, err := params.CodeRunner.ContainerService.RunCommand(ctx, containerID, container.RunCommandParams{Cmd: cmd})
 	if err != nil {
 		message := fmt.Sprintf("could not execute program with command %q", containerConf.ExecutionCmd)
 		errorSlug := errorutil.ErrorSlug()

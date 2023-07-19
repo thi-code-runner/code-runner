@@ -3,6 +3,7 @@ package check
 import (
 	errorutil "code-runner/error_util"
 	"code-runner/model"
+	"code-runner/services/codeRunner"
 	"code-runner/session"
 	"context"
 	"fmt"
@@ -26,7 +27,7 @@ func Check(ctx context.Context, cmdID string, params CheckParams) ([]*model.Test
 		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
 		return nil, errorutil.ErrorWrap(errorSlug, message)
 	}
-	err = params.CodeRunner.Compile(ctx, containerID, containerConf, params.Writer)
+	err = params.CodeRunner.Compile(ctx, containerID, containerConf.CompilationCmd, params.Writer)
 	if err != nil {
 		message := fmt.Sprintf("could not compile program with command %q", containerConf.CompilationCmd)
 		errorSlug := errorutil.ErrorSlug()
@@ -44,9 +45,17 @@ func Check(ctx context.Context, cmdID string, params CheckParams) ([]*model.Test
 	for _, test := range params.Tests {
 		switch test.Type {
 		case "output":
-			testResult, _ := outputTest(ctx, sess, containerConf.ExecutionCmd, test, params)
+			cmd, err := params.CodeRunner.TransformCommand(containerConf.ExecutionCmd, codeRunner.TransformParams{FileName: test.Param["filename"]})
 			if err != nil {
-				message := fmt.Sprintf("could not execute test with command %q", containerConf.ExecutionCmd)
+				message := fmt.Sprintf("could not execute test of type %s", test.Type)
+				errorSlug := errorutil.ErrorSlug()
+				log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
+				errors = append(errors, errorutil.ErrorWrap(errorSlug, message).Error())
+				continue
+			}
+			testResult, err := outputTest(ctx, sess, cmd, test, params)
+			if err != nil {
+				message := fmt.Sprintf("could not execute test with command %q", cmd)
 				errorSlug := errorutil.ErrorSlug()
 				log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
 				errors = append(errors, errorutil.ErrorWrap(errorSlug, message).Error())
@@ -62,9 +71,17 @@ func Check(ctx context.Context, cmdID string, params CheckParams) ([]*model.Test
 			fileCheckParams.Writer = params.Writer
 			fileCheckParams.ReportPath = containerConf.ReportPath
 			fileCheckParams.ReportExtractor = containerConf.ReportExtractor
-			testResult, _ := fileTest(ctx, sess, containerConf.ExecutionCmd, containerID, test, fileCheckParams)
+			cmd, err := params.CodeRunner.TransformCommand(containerConf.ExecutionCmd, codeRunner.TransformParams{FileName: test.Param["filename"]})
 			if err != nil {
-				message := fmt.Sprintf("could not execute test with command %q", containerConf.ExecutionCmd)
+				message := fmt.Sprintf("could not execute test of type %s", test.Type)
+				errorSlug := errorutil.ErrorSlug()
+				log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
+				errors = append(errors, errorutil.ErrorWrap(errorSlug, message).Error())
+				continue
+			}
+			testResult, err := fileTest(ctx, sess, cmd, containerID, test, fileCheckParams)
+			if err != nil {
+				message := fmt.Sprintf("could not execute test with command %q", cmd)
 				errorSlug := errorutil.ErrorSlug()
 				log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
 				errors = append(errors, errorutil.ErrorWrap(errorSlug, message).Error())
