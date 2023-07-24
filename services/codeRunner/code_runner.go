@@ -28,7 +28,7 @@ var (
 
 type ContainerService interface {
 	RunCommand(context.Context, string, container.RunCommandParams) (io.ReadWriteCloser, string, error)
-	CreateAndStartContainer(context.Context, string) (string, error)
+	CreateAndStartContainer(context.Context, string, container.ContainerCreateParams) (string, error)
 	PullImage(context.Context, string, io.Writer) error
 	ContainerRemove(context.Context, string, container.RemoveCommandParams) error
 	CopyToContainer(context.Context, string, []*model.SourceFile) error
@@ -64,10 +64,10 @@ func NewService(ctx context.Context, containerService ContainerService, schedule
 					func() {
 						ctx, cancel := context.WithTimeout(ctx, pullImageTimeout)
 						defer cancel()
-						id, _ := s.ContainerService.CreateAndStartContainer(ctx, cc.Image)
+						id, _ := s.ContainerService.CreateAndStartContainer(ctx, cc.Image, container.ContainerCreateParams{Memory: cc.Memory, CPU: cc.CPU, ReadOnly: cc.ReadOnly})
 						s.Lock()
 						defer s.Unlock()
-						s.reservedContainers[cc.Image] = append(s.reservedContainers[cc.Image], id)
+						s.reservedContainers[cc.ID] = append(s.reservedContainers[cc.ID], id)
 					}()
 				}
 			}
@@ -120,7 +120,7 @@ func (s *Service) GetContainer(ctx context.Context, cmdID string, sessionKey str
 		containerID = sess.ContainerID
 	}
 	if _, ok := s.containers[containerID]; !ok {
-		relevantContainers := s.reservedContainers[containerConf.Image]
+		relevantContainers := s.reservedContainers[containerConf.ID]
 		if len(relevantContainers) > 0 {
 			func() {
 				s.Lock()
@@ -128,11 +128,11 @@ func (s *Service) GetContainer(ctx context.Context, cmdID string, sessionKey str
 				relevantContainer := relevantContainers[len(relevantContainers)-1]
 				s.containers[relevantContainer] = struct{}{}
 				containerID = relevantContainer
-				s.reservedContainers[containerConf.Image] = s.reservedContainers[containerConf.Image][:len(relevantContainers)-1]
+				s.reservedContainers[containerConf.ID] = s.reservedContainers[containerConf.ID][:len(relevantContainers)-1]
 			}()
 		} else {
 			var err error
-			containerID, err = s.ContainerService.CreateAndStartContainer(ctx, containerConf.Image)
+			containerID, err = s.ContainerService.CreateAndStartContainer(ctx, containerConf.Image, container.ContainerCreateParams{Memory: containerConf.Memory, CPU: containerConf.CPU, ReadOnly: containerConf.ReadOnly})
 			if err != nil {
 				return nil, "", err
 			}

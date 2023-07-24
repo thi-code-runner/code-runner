@@ -16,7 +16,7 @@ func fileTest(ctx context.Context, sess *session.Session, executionCmd string, c
 	resultData.Test = test
 	resultData.Passed = true
 
-	con, executionID, err := params.CodeRunner.ContainerService.RunCommand(ctx, sess.ContainerID, container.RunCommandParams{Cmd: executionCmd})
+	con, executionID, err := params.CodeRunner.ContainerService.RunCommand(ctx, sess.ContainerID, container.RunCommandParams{Cmd: executionCmd, User: "nobody"})
 	defer con.Close()
 	sess.Con = con
 	err = params.CodeRunner.Copy(params.Writer.WithType(wswriter.WriteOutput), con)

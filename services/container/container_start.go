@@ -10,24 +10,30 @@ import (
 	"time"
 )
 
-func (cs *Service) CreateAndStartContainer(ctx context.Context, image string) (string, error) {
+func (cs *Service) CreateAndStartContainer(ctx context.Context, image string, params ContainerCreateParams) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
 	defer cancel()
 	containerName := fmt.Sprintf("code-runner-container-%s", uuid.New().String())
-	resp, err := cs.cli.ContainerCreate(ctx, &container.Config{
-		Image:        image,
-		Cmd:          []string{"/bin/sh"},
-		WorkingDir:   "/src",
-		Tty:          true,
-		AttachStderr: true,
-		AttachStdout: true,
-		AttachStdin:  true,
-		OpenStdin:    true,
-	}, &container.HostConfig{NetworkMode: "none", AutoRemove: true}, nil, nil, containerName)
+	var pidsLimit int64 = 100
+	readOnlyPaths := []string{"/proc", "/bin", "/boot", "/dev", "/mnt", "/home", "/etc", "/lib", "/media", "/opt", "/root", "/sbin", "/srv", "/sys", "/tmp", "/usr", "/var"}
+	var resp, err = cs.cli.ContainerCreate(ctx, &container.Config{
+		Image:           image,
+		Cmd:             []string{"/bin/sh"},
+		WorkingDir:      "/code-runner",
+		NetworkDisabled: true,
+		Tty:             true,
+		AttachStderr:    true,
+		AttachStdout:    true,
+		AttachStdin:     true,
+		OpenStdin:       true,
+	}, &container.HostConfig{ReadonlyPaths: readOnlyPaths, NetworkMode: "none", AutoRemove: true, Resources: container.Resources{PidsLimit: &pidsLimit, Memory: params.Memory * 1024 * 1024, NanoCPUs: int64(params.CPU * 100000 * 10000)}}, nil, nil, containerName)
 	if err != nil {
 		return "", errorutil.ErrorWrap(err, fmt.Sprintf("could not create container with image %q", image))
 	}
 	err = cs.cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{})
+	if !params.ReadOnly {
+		cs.RunCommand(ctx, resp.ID, RunCommandParams{Cmd: "chmod o+w /code-runner"})
+	}
 	if err != nil {
 		return "", errorutil.ErrorWrap(err, fmt.Sprintf("could not start container with image %s", image))
 	}

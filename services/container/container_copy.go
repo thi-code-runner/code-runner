@@ -22,7 +22,7 @@ func (cs *Service) CopyToContainer(ctx context.Context, id string, files []*mode
 		if err != nil {
 			return errorutil.ErrorWrap(err, "could not create tar archive")
 		}
-		err = cs.cli.CopyToContainer(ctx, id, "/src", bytes.NewReader(tar), types.CopyToContainerOptions{AllowOverwriteDirWithFile: true})
+		err = cs.cli.CopyToContainer(ctx, id, "/code-runner", bytes.NewReader(tar), types.CopyToContainerOptions{AllowOverwriteDirWithFile: true})
 		if err != nil {
 			return errorutil.ErrorWrap(err, fmt.Sprintf("could not copy files into docker container %q", id))
 		}
@@ -37,7 +37,7 @@ func (cs *Service) CopyResourcesToContainer(ctx context.Context, id string, reso
 		if err != nil {
 			return errorutil.ErrorWrap(err, "could not create tar archive")
 		}
-		err = cs.cli.CopyToContainer(ctx, id, "/src", bytes.NewReader(tar), types.CopyToContainerOptions{AllowOverwriteDirWithFile: true})
+		err = cs.cli.CopyToContainer(ctx, id, "/code-runner", bytes.NewReader(tar), types.CopyToContainerOptions{AllowOverwriteDirWithFile: true})
 		if err != nil {
 			return errorutil.ErrorWrap(err, fmt.Sprintf("could not copy resources into docker container %q", id))
 		}

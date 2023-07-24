@@ -5,15 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="92bafd55-f7e1-4d2c-ac68-e22b7983305a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/services/codeRunner/code_runner_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/check.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/check.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/codeRunner/check/file_check.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/file_check.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/output_check.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/output_check.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/code_runner.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/codeRunner/run/run.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/run/run.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/container/container_copy.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/container_copy.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/container/container_exec.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/container_exec.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/container/container_start.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/container_start.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/container/params.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/params.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -179,7 +181,7 @@
       <workItem from="1687780675616" duration="67475000" />
       <workItem from="1689001860039" duration="24417000" />
       <workItem from="1689105041932" duration="2337000" />
-      <workItem from="1689776088390" duration="1875000" />
+      <workItem from="1689776088390" duration="19805000" />
     </task>
     <task id="LOCAL-00001" summary="enable stdin passing from websocket connection">
       <created>1688410773989</created>
@@ -258,7 +260,21 @@
       <option name="project" value="LOCAL" />
       <updated>1689695210576</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="add templating to executionCmd">
+      <created>1689777986444</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1689777986444</updated>
+    </task>
+    <task id="LOCAL-00013" summary="add MainFile to CheckParams to allow templating for output tests">
+      <created>1689780439524</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1689780439524</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -288,7 +304,9 @@
     <MESSAGE value="add extractor and refactor to smaller packages" />
     <MESSAGE value="implement extractors in file tests. More validation needed" />
     <MESSAGE value="add schedule durations to config file" />
-    <option name="LAST_COMMIT_MESSAGE" value="add schedule durations to config file" />
+    <MESSAGE value="add templating to executionCmd" />
+    <MESSAGE value="add MainFile to CheckParams to allow templating for output tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="add MainFile to CheckParams to allow templating for output tests" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

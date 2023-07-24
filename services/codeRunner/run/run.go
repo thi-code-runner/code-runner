@@ -40,7 +40,7 @@ func Run(ctx context.Context, id string, params ExecuteParams) error {
 		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
 		return errorutil.ErrorWrap(errorSlug, message)
 	}
-	con, _, err := params.CodeRunner.ContainerService.RunCommand(ctx, containerID, container.RunCommandParams{Cmd: cmd})
+	con, _, err := params.CodeRunner.ContainerService.RunCommand(ctx, containerID, container.RunCommandParams{Cmd: cmd, User: "nobody"})
 	if err != nil {
 		message := fmt.Sprintf("could not execute program with command %q", containerConf.ExecutionCmd)
 		errorSlug := errorutil.ErrorSlug()

@@ -21,6 +21,9 @@ type ContainerConfig struct {
 	Add                    []string `json:"add"`
 	ReportPath             string   `json:"reportPath"`
 	ReportExtractor        string   `json:"reportExtractor"`
+	Memory                 int64    `json:"memory"`
+	CPU                    float32  `json:"cpu"`
+	ReadOnly               bool     `json:"readOnly"`
 }
 
 type Config struct {

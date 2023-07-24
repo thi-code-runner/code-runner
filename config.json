@@ -7,7 +7,10 @@
       "image": "eclipse-temurin:20-jdk",
       "compilationCmd": "javac *.java",
       "executionCmd": "java {{getSubstringUntil .FileName \".\"}}",
-      "reserveContainerAmount": 0
+      "reserveContainerAmount": 0,
+      "Memory": 100,
+      "CPU": 0.5,
+      "readOnly": true
     },
     {
       "id": "junit-5",
@@ -16,8 +19,11 @@
       "executionCmd": "java -jar resources/junit-platform-console-standalone-1.9.3.jar --class-path target --select-class {{getSubstringUntil .FileName \".\"}} --reports-dir=./reports --details=tree",
       "add": ["./resources/junit-platform-console-standalone-1.9.3.jar"],
       "reportExtractor": "junit-5",
-      "reportPath": "/src/reports/TEST-junit-jupiter.xml",
-      "reserveContainerAmount": 0
+      "reportPath": "/code-runner/reports/TEST-junit-jupiter.xml",
+      "Memory": 100,
+      "CPU": 0.5,
+      "reserveContainerAmount": 1,
+      "readOnly": false
     },
     {
       "id": "script",

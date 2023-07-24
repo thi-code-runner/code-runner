@@ -11,7 +11,7 @@ import (
 )
 
 func outputTest(ctx context.Context, sess *session.Session, executionCmd string, test *model.TestConfiguration, params CheckParams) (*model.TestResponseData, error) {
-	con, _, err := params.CodeRunner.ContainerService.RunCommand(ctx, sess.ContainerID, container.RunCommandParams{Cmd: executionCmd})
+	con, _, err := params.CodeRunner.ContainerService.RunCommand(ctx, sess.ContainerID, container.RunCommandParams{Cmd: executionCmd, User: "nobody"})
 	defer con.Close()
 	sess.Con = con
 	err = params.CodeRunner.Copy(params.Writer.WithType(wswriter.WriteOutput), con)

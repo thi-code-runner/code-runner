@@ -10,7 +10,7 @@ import (
 
 func (cs *Service) RunCommand(ctx context.Context, id string, params RunCommandParams) (io.ReadWriteCloser, string, error) {
 
-	exec, err := cs.cli.ContainerExecCreate(ctx, id, types.ExecConfig{AttachStdin: true, AttachStderr: true, AttachStdout: true, Tty: true, WorkingDir: "/src", Cmd: []string{"sh", "-c", params.Cmd}})
+	exec, err := cs.cli.ContainerExecCreate(ctx, id, types.ExecConfig{User: params.User, AttachStdin: true, AttachStderr: true, AttachStdout: true, Tty: true, WorkingDir: "/code-runner", Cmd: []string{"sh", "-c", params.Cmd}})
 	if err != nil {
 		return nil, "", errorutil.ErrorWrap(err, fmt.Sprintf("docker encountered error while executing command %q", params.Cmd))
 	}
