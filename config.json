@@ -21,7 +21,7 @@
       "reportExtractor": "junit-5",
       "reportPath": "/code-runner/reports/TEST-junit-jupiter.xml",
       "Memory": 100,
-      "CPU": 0.5,
+      "CPU": 2,
       "reserveContainerAmount": 1,
       "readOnly": false
     },

@@ -12,8 +12,8 @@ type TestResponseData struct {
 	Detail  []*Detail          `json:"detail"`
 }
 type Detail struct {
-	Name    string
-	Class   string
-	Time    string
-	Message string
+	Name    string `json:"name"`
+	Class   string `json:"class"`
+	Time    string `json:"time"`
+	Message string `json:"message"`
 }
