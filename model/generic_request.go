@@ -1,6 +1,6 @@
 package model
 
-type GenericRequest struct {
+type Request struct {
 	Type string                 `json:"type"`
 	Data map[string]interface{} `json:"data"`
 }

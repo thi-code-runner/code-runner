@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="92bafd55-f7e1-4d2c-ac68-e22b7983305a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/resources/perm.policy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/run_request.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/run_request.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/source_file.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/source_file.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/test_response.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/test_response.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/generic_request.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/generic_request.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,27 +39,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/martin/Documents/studium/hochschule/master/code-runner/resources&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "go.import.settings.migrated": "true",
+    "last_opened_file_path": "/Users/martin/Documents/studium/hochschule/master/code-runner",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/resources" />
@@ -74,14 +73,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Go Build.go build code-runner">
-    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
-      <module name="code-runner" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="FILE" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <method v="2" />
-    </configuration>
     <configuration name="go build code-runner" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="code-runner" />
       <working_directory value="$PROJECT_DIR$" />
@@ -139,15 +130,6 @@
       <pattern value="^\QTestTemplate\E$" />
       <method v="2" />
     </configuration>
-    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
-      <module name="code-runner" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="DIRECTORY" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <method v="2" />
-    </configuration>
     <list>
       <item itemvalue="Go Build.go build code-runner" />
       <item itemvalue="Go Test.TestTemplate in code-runner/services/codeRunner" />
@@ -176,7 +158,8 @@
       <workItem from="1687780675616" duration="67475000" />
       <workItem from="1689001860039" duration="24417000" />
       <workItem from="1689105041932" duration="2337000" />
-      <workItem from="1689776088390" duration="24418000" />
+      <workItem from="1689776088390" duration="39244000" />
+      <workItem from="1690981713845" duration="387000" />
     </task>
     <task id="LOCAL-00001" summary="enable stdin passing from websocket connection">
       <created>1688410773989</created>
@@ -276,7 +259,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690234081533</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="formatting and json naming">
+      <created>1690311691517</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1690311691517</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -309,7 +299,8 @@
     <MESSAGE value="add templating to executionCmd" />
     <MESSAGE value="add MainFile to CheckParams to allow templating for output tests" />
     <MESSAGE value="add memory and cpu limits as well as read only flag" />
-    <option name="LAST_COMMIT_MESSAGE" value="add memory and cpu limits as well as read only flag" />
+    <MESSAGE value="formatting and json naming" />
+    <option name="LAST_COMMIT_MESSAGE" value="formatting and json naming" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

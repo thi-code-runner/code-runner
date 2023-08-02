@@ -52,13 +52,13 @@ func (s *Server) initRoutes() {
 		}
 		defer c.Close(websocket.StatusNormalClosure, "")
 		for {
-			var v model.GenericRequest
 			_, buf, err := c.Read(r.Context())
 			if err != nil {
 				if c.Ping(r.Context()) != nil {
 					break
 				}
 			}
+			var v model.Request
 			err = json.Unmarshal(buf, &v)
 			if err != nil {
 				err = errorutil.ErrorWrap(err, "code-runner failed\n\trequest encountered json parse error")
