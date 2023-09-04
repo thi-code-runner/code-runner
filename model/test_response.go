@@ -14,6 +14,5 @@ type TestResponseData struct {
 type Detail struct {
 	Name    string `json:"name"`
 	Class   string `json:"class"`
-	Time    string `json:"time"`
 	Message string `json:"message"`
 }

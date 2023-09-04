@@ -9,7 +9,7 @@ all: clean generate lint vet test build ## Run the tests and build the binary.
 
 build: ## Build the binary.
 	@mkdir -p "bin"  || true
-	go build -C cmd/cr-server -o ../../bin/code-runner
+	go build -C . -o ./bin/code-runner
 
 deps: ## Install dependencies.
 	@go install golang.org/x/lint/golint

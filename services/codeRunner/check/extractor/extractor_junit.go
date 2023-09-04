@@ -3,26 +3,37 @@ package extractor
 import (
 	"code-runner/model"
 	"regexp"
+	"strings"
 )
 
 func init() {
-	addExtractor("junit-5", junitExtract)
+	addExtractor("junit-5-file", junitExtractFile)
+	addExtractor("junit-5-out", junitExtractOut)
 }
 
-var pattern = regexp.MustCompile(`(?m)<testcase name="(.*)" classname="(.*)" time="(.*)">\s<failure message="(.*)" type.*?>`)
+var patternFile = regexp.MustCompile(`(?m)<testcase name="(.*)" classname="(.*)" time="(.*)">\s<failure message="(.*)" type.*?>`)
+var patternOut = regexp.MustCompile(`(?m)className[\s\S]*?=[\s\S]*?'([\s\S]*?)'[\s\S]*?methodName\s*=\s*'([\s\S]*?)'[\s\S]*?:([\s\S]*?)org\.junit`)
 
-func junitExtract(r string) []*model.Detail {
+func junitExtractFile(r string) []*model.Detail {
 	result := make([]*model.Detail, 0)
-	groups := pattern.FindAllStringSubmatch(r, -1)
+	groups := patternFile.FindAllStringSubmatch(r, -1)
 	for _, g := range groups {
-		result = append(result, &model.Detail{Name: getOrDefault(g, 1, ""), Class: getOrDefault(g, 2, ""), Time: getOrDefault(g, 3, "0"), Message: getOrDefault(g, 4, "")})
+		result = append(result, &model.Detail{Name: getOrDefault(g, 1, ""), Class: getOrDefault(g, 2, ""), Message: getOrDefault(g, 4, "")})
 	}
 	return result
 }
 
+func junitExtractOut(r string) []*model.Detail {
+	result := make([]*model.Detail, 0)
+	groups := patternOut.FindAllStringSubmatch(r, -1)
+	for _, g := range groups {
+		result = append(result, &model.Detail{Name: getOrDefault(g, 1, ""), Class: getOrDefault(g, 2, ""), Message: getOrDefault(g, 3, "")})
+	}
+	return result
+}
 func getOrDefault(s []string, i int, def string) string {
 	if i >= len(s) {
 		return def
 	}
-	return s[i]
+	return strings.Trim(s[i], " ")
 }

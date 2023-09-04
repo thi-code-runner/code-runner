@@ -31,10 +31,14 @@ func fileTest(ctx context.Context, sess *session.Session, executionCmd string, c
 		resultData.Message = fmt.Sprintf("file test failed with error code %d", code)
 		resultData.Passed = false
 	}
-	if len(params.ReportPath) > 0 && len(params.ReportExtractor) > 0 {
-		//We ignore this error so that we just return an empty *Detail slice
-		report, _ := params.CodeRunner.ContainerService.CopyFromContainer(ctx, containerID, params.ReportPath)
-		resultData.Detail = extractor.Extract(params.ReportExtractor, report)
+	if len(params.ReportExtractor) > 0 {
+		if len(params.ReportPath) > 0 {
+			//We ignore this error so that we just return an empty *Detail slice
+			report, _ := params.CodeRunner.ContainerService.CopyFromContainer(ctx, containerID, params.ReportPath)
+			resultData.Detail = extractor.Extract(params.ReportExtractor, report)
+			return &resultData, nil
+		}
+		resultData.Detail = extractor.Extract(params.ReportExtractor, string(params.Writer.GetOutput()))
 	}
 
 	return &resultData, nil

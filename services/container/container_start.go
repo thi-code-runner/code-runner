@@ -15,7 +15,6 @@ func (cs *Service) CreateAndStartContainer(ctx context.Context, image string, pa
 	defer cancel()
 	containerName := fmt.Sprintf("code-runner-container-%s", uuid.New().String())
 	var pidsLimit int64 = 100
-	readOnlyPaths := []string{"/proc", "/bin", "/boot", "/dev", "/mnt", "/home", "/etc", "/lib", "/media", "/opt", "/root", "/sbin", "/srv", "/sys", "/tmp", "/usr", "/var"}
 	var resp, err = cs.cli.ContainerCreate(ctx, &container.Config{
 		Image:           image,
 		Cmd:             []string{"/bin/sh"},
@@ -26,7 +25,7 @@ func (cs *Service) CreateAndStartContainer(ctx context.Context, image string, pa
 		AttachStdout:    true,
 		AttachStdin:     true,
 		OpenStdin:       true,
-	}, &container.HostConfig{ReadonlyPaths: readOnlyPaths, NetworkMode: "none", AutoRemove: true, Resources: container.Resources{PidsLimit: &pidsLimit, Memory: params.Memory * 1024 * 1024, NanoCPUs: int64(params.CPU * 100000 * 10000)}}, nil, nil, containerName)
+	}, &container.HostConfig{NetworkMode: "none", AutoRemove: true, Resources: container.Resources{PidsLimit: &pidsLimit, Memory: params.Memory * 1024 * 1024, NanoCPUs: int64(params.CPU * 100000 * 10000)}}, nil, nil, containerName)
 	if err != nil {
 		return "", errorutil.ErrorWrap(err, fmt.Sprintf("could not create container with image %q", image))
 	}

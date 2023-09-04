@@ -5,9 +5,11 @@ import (
 	errorutil "code-runner/error_util"
 	"code-runner/model"
 	"context"
+	"encoding/base64"
 	"fmt"
 	"github.com/docker/docker/api/types"
 	"io"
+	"os"
 	"time"
 )
 
@@ -22,7 +24,17 @@ func (cs *Service) CopyToContainer(ctx context.Context, id string, files []*mode
 		if err != nil {
 			return errorutil.ErrorWrap(err, "could not create tar archive")
 		}
-		err = cs.cli.CopyToContainer(ctx, id, "/code-runner", bytes.NewReader(tar), types.CopyToContainerOptions{AllowOverwriteDirWithFile: true})
+		//err = cs.cli.CopyToContainer(ctx, id, "/code-runner", bytes.NewReader(tar), types.CopyToContainerOptions{AllowOverwriteDirWithFile: true})
+		buf := make([]byte, base64.StdEncoding.EncodedLen(len(tar)))
+		base64.StdEncoding.Encode(buf, tar)
+
+		exec, err := cs.cli.ContainerExecCreate(ctx, id, types.ExecConfig{User: "nobody", AttachStdin: true, AttachStderr: true, AttachStdout: true, Tty: true, WorkingDir: "/code-runner", Cmd: []string{"sh", "-c", "sh"}})
+		hijackedResponse, err := cs.cli.ContainerExecAttach(ctx, exec.ID, types.ExecStartCheck{Tty: true, Detach: false})
+		defer hijackedResponse.Close()
+		hijackedResponse.Conn.Write([]byte("echo -n "))
+		hijackedResponse.Conn.Write(buf)
+		hijackedResponse.Conn.Write(append([]byte(" | base64 -d | tar -xf -"), '\n'))
+		io.Copy(os.Stdout, hijackedResponse.Conn)
 		if err != nil {
 			return errorutil.ErrorWrap(err, fmt.Sprintf("could not copy files into docker container %q", id))
 		}
