@@ -16,6 +16,7 @@ type ContainerCreateParams struct {
 	Memory   int64
 	CPU      float32
 	ReadOnly bool
+	DiskSize string
 }
 type RemoveCommandParams struct {
 	Force bool

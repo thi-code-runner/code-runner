@@ -64,7 +64,7 @@ func NewService(ctx context.Context, containerService ContainerService, schedule
 					func() {
 						ctx, cancel := context.WithTimeout(ctx, pullImageTimeout)
 						defer cancel()
-						id, _ := s.ContainerService.CreateAndStartContainer(ctx, cc.Image, container.ContainerCreateParams{Memory: cc.Memory, CPU: cc.CPU, ReadOnly: cc.ReadOnly})
+						id, _ := s.ContainerService.CreateAndStartContainer(ctx, cc.Image, container.ContainerCreateParams{Memory: cc.Memory, CPU: cc.CPU, ReadOnly: cc.ReadOnly, DiskSize: cc.DiskSize})
 						s.Lock()
 						defer s.Unlock()
 						s.reservedContainers[cc.ID] = append(s.reservedContainers[cc.ID], id)
@@ -132,7 +132,7 @@ func (s *Service) GetContainer(ctx context.Context, cmdID string, sessionKey str
 			}()
 		} else {
 			var err error
-			containerID, err = s.ContainerService.CreateAndStartContainer(ctx, containerConf.Image, container.ContainerCreateParams{Memory: containerConf.Memory, CPU: containerConf.CPU, ReadOnly: containerConf.ReadOnly})
+			containerID, err = s.ContainerService.CreateAndStartContainer(ctx, containerConf.Image, container.ContainerCreateParams{Memory: containerConf.Memory, CPU: containerConf.CPU, ReadOnly: containerConf.ReadOnly, DiskSize: containerConf.DiskSize})
 			if err != nil {
 				return nil, "", err
 			}

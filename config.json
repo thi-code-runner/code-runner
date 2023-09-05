@@ -10,7 +10,7 @@
       "reserveContainerAmount": 0,
       "Memory": 100,
       "CPU": 0.5,
-      "readOnly": false
+      "readOnly": true
     },
     {
       "id": "junit-5",
@@ -21,14 +21,24 @@
       "reportExtractor": "junit-5-out",
       "Memory": 100,
       "CPU": 2,
-      "reserveContainerAmount": 1,
+      "reserveContainerAmount": 0,
       "readOnly": false
     },
     {
       "id": "script",
       "image": "alpine:latest",
-      "executionCmd": "./test.sh",
-      "reserveContainerAmount": 0
+      "executionCmd": "sh ./test.sh",
+      "reserveContainerAmount": 0,
+      "readOnly": false,
+      "diskSize": "10m"
+    },
+
+    {"id": "py",
+      "image": "python",
+      "executionCmd": "python main.py",
+      "reserveContainerAmount": 0,
+      "readOnly": true,
+      "diskSize": "10m"
     }
   ]
 }

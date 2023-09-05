@@ -24,6 +24,7 @@ type ContainerConfig struct {
 	Memory                 int64    `json:"memory"`
 	CPU                    float32  `json:"cpu"`
 	ReadOnly               bool     `json:"readOnly"`
+	DiskSize               string   `json:"diskSize"`
 }
 
 type Config struct {
