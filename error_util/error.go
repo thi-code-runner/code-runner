@@ -1,10 +1,13 @@
 package errorutil
 
 import (
+	"errors"
 	"fmt"
 	"github.com/google/uuid"
 	"strings"
 )
+
+var TimeoutErr = errors.New("timeout error")
 
 func ErrorWrap(err error, message string) error {
 	return fmt.Errorf("%s\n\t%s", message, err.Error())

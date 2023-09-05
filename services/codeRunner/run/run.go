@@ -7,6 +7,7 @@ import (
 	"code-runner/services/container"
 	"code-runner/session"
 	"context"
+	"errors"
 	"fmt"
 	"log"
 )
@@ -40,9 +41,9 @@ func Run(ctx context.Context, id string, params ExecuteParams) error {
 		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
 		return errorutil.ErrorWrap(errorSlug, message)
 	}
-	con, _, err := params.CodeRunner.ContainerService.RunCommand(ctx, containerID, container.RunCommandParams{Cmd: cmd, User: "nobody"})
+	con, _, err := params.CodeRunner.ContainerService.RunCommand(context.Background(), containerID, container.RunCommandParams{Cmd: cmd, User: "nobody"})
 	if err != nil {
-		message := fmt.Sprintf("could not execute program with command %q", containerConf.ExecutionCmd)
+		message := fmt.Sprintf("could not execute program with command %q", cmd)
 		errorSlug := errorutil.ErrorSlug()
 		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
 		return errorutil.ErrorWrap(errorSlug, message)
@@ -56,9 +57,12 @@ func Run(ctx context.Context, id string, params ExecuteParams) error {
 		return errorutil.ErrorWrap(errorSlug, message)
 	}
 	sess.Con = con
-	err = params.CodeRunner.Copy(params.Writer.WithType(wswriter.WriteOutput), con)
+	err = params.CodeRunner.CopyWithTimeout(ctx)(params.Writer.WithType(wswriter.WriteOutput), con)
 	if err != nil {
-		message := fmt.Sprintf("could not send result of compilation with command %q", containerConf.ExecutionCmd)
+		message := fmt.Sprintf("could not execute command %q, please try again", cmd)
+		if errors.Is(err, errorutil.TimeoutErr) {
+			message = fmt.Sprintf("could not execute command %q, because it timed out", cmd)
+		}
 		errorSlug := errorutil.ErrorSlug()
 		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
 		return errorutil.ErrorWrap(errorSlug, message)

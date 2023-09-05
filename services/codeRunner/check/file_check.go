@@ -16,10 +16,10 @@ func fileTest(ctx context.Context, sess *session.Session, executionCmd string, c
 	resultData.Test = test
 	resultData.Passed = true
 
-	con, executionID, err := params.CodeRunner.ContainerService.RunCommand(ctx, sess.ContainerID, container.RunCommandParams{Cmd: executionCmd, User: "nobody"})
+	con, executionID, err := params.CodeRunner.ContainerService.RunCommand(context.Background(), sess.ContainerID, container.RunCommandParams{Cmd: executionCmd, User: "nobody"})
 	defer con.Close()
 	sess.Con = con
-	err = params.CodeRunner.Copy(params.Writer.WithType(wswriter.WriteOutput), con)
+	err = params.CodeRunner.CopyWithTimeout(ctx)(params.Writer.WithType(wswriter.WriteOutput), con)
 	if err != nil {
 		return nil, errorutil.ErrorWrap(err, "execution failed")
 	}

@@ -8,12 +8,14 @@ import (
 	"code-runner/services/codeRunner/check"
 	"code-runner/services/codeRunner/input"
 	"code-runner/services/codeRunner/run"
+	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
 	"log"
 	"net/http"
 	"nhooyr.io/websocket"
+	"time"
 )
 
 type Server struct {
@@ -78,9 +80,14 @@ func (s *Server) initRoutes() {
 						return
 					}
 					data := runRequest.Data
+					if data.Timeout == 0 {
+						data.Timeout = 10
+					}
 					wsWriter := wswriter.NewWriter(c, wswriter.WriteOutput)
+					ctx, cancel := context.WithTimeout(r.Context(), time.Duration(data.Timeout)*time.Second)
+					defer cancel()
 					err := run.Run(
-						r.Context(),
+						ctx,
 						data.Cmd,
 						run.ExecuteParams{SessionKey: sessionKey, Writer: wsWriter, Files: data.Sourcefiles, MainFile: data.Mainfilename, CodeRunner: s.CodeRunner},
 					)
@@ -116,9 +123,14 @@ func (s *Server) initRoutes() {
 						log.Println(err)
 						return
 					}
+					if testRequest.Data.Timeout == 0 {
+						testRequest.Data.Timeout = 10
+					}
 					wsWriter := wswriter.NewWriter(c, wswriter.WriteOutput)
+					ctx, cancel := context.WithTimeout(r.Context(), time.Duration(testRequest.Data.Timeout)*time.Second)
+					defer cancel()
 					testResults, err := check.Check(
-						r.Context(),
+						ctx,
 						testRequest.Data.Cmd,
 						check.CheckParams{Writer: wsWriter, SessionKey: sessionKey, MainFile: testRequest.Data.Mainfilename, Files: testRequest.Data.Sourcefiles,
 							Tests: testRequest.Data.Tests, CodeRunner: s.CodeRunner},

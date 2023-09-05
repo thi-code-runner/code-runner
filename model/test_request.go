@@ -9,6 +9,7 @@ type TestData struct {
 	Tests        []*TestConfiguration `json:"tests"`
 	Mainfilename string               `json:"mainfilename"`
 	Sourcefiles  []*SourceFile        `json:"sourcefiles"`
+	Timeout      int                  `json:"timeout"`
 }
 
 type TestConfiguration struct {

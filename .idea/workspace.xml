@@ -6,13 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="92bafd55-f7e1-4d2c-ac68-e22b7983305a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/error_util/error.go" beforeDir="false" afterPath="$PROJECT_DIR$/error_util/error.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/run_request.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/run_request.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/test_request.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/test_request.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/file_check.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/file_check.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/output_check.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/output_check.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/code_runner.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/container/container_copy.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/container_copy.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/container/container_start.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/container_start.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/container/create_tar.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/create_tar.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/container/params.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/params.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/run/run.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/run/run.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

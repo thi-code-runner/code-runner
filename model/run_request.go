@@ -9,4 +9,5 @@ type RunData struct {
 	Cmd          string        `json:"cmd"`
 	Mainfilename string        `json:"mainfilename"`
 	Sourcefiles  []*SourceFile `json:"sourcefiles"`
+	Timeout      int           `json:"timeout"`
 }

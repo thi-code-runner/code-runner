@@ -152,7 +152,7 @@ func (s *Service) GetContainer(ctx context.Context, cmdID string, sessionKey str
 }
 func (s *Service) Compile(ctx context.Context, containerID string, compilationCmd string, writer wswriter.Writer) error {
 	if len(compilationCmd) > 0 {
-		con, _, err := s.ContainerService.RunCommand(ctx, containerID, container.RunCommandParams{Cmd: compilationCmd})
+		con, _, err := s.ContainerService.RunCommand(context.Background(), containerID, container.RunCommandParams{Cmd: compilationCmd})
 		if err != nil {
 			return err
 		}
@@ -172,6 +172,37 @@ func (s *Service) Shutdown(ctx context.Context) {
 	}
 	for id := range s.containers {
 		_ = s.ContainerService.ContainerRemove(ctx, id, container.RemoveCommandParams{Force: true})
+	}
+}
+func (s *Service) CopyWithTimeout(ctx context.Context) func(w io.Writer, r io.Reader) error {
+	return func(w io.Writer, r io.Reader) error {
+		var err error
+		buf := make([]byte, 32*1024)
+		ch := make(chan int, 0)
+		for {
+			var n int
+			var er error
+			go func() {
+				n, er = r.Read(buf)
+				ch <- n
+			}()
+			select {
+			case <-ctx.Done():
+				return errorutil.TimeoutErr
+			case <-ch:
+				//noop
+			}
+			if n > 0 {
+				w.Write(buf[0:n])
+			}
+			if er != nil {
+				if er != io.EOF {
+					err = er
+				}
+				break
+			}
+		}
+		return err
 	}
 }
 func (s *Service) Copy(w io.Writer, r io.Reader) error {
