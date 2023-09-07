@@ -6,14 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="92bafd55-f7e1-4d2c-ac68-e22b7983305a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/error_util/error.go" beforeDir="false" afterPath="$PROJECT_DIR$/error_util/error.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/run_request.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/run_request.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/test_request.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/test_request.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/file_check.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/file_check.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/output_check.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/output_check.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/code_runner.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/run/run.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/run/run.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/container/container_copy.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/container_copy.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,18 +117,6 @@
       <pattern value="^\QTestJunitExtractorIncorrectReport\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestScheduler_AddJob in code-runner/services/scheduler" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="code-runner" />
-      <working_directory value="$PROJECT_DIR$/services/scheduler" />
-      <root_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <package value="code-runner/services/scheduler" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <pattern value="^\QTestScheduler_AddJob\E$" />
-      <method v="2" />
-    </configuration>
     <configuration name="TestTemplate in code-runner/services/codeRunner" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="code-runner" />
       <working_directory value="$PROJECT_DIR$/services/codeRunner" />
@@ -153,20 +138,34 @@
       <framework value="gotest" />
       <method v="2" />
     </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
+      <deployment type="dockerfile" />
+      <method v="2" />
+    </configuration>
+    <configuration name="junit.Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="imageTag" value="sylent/junit5-runner" />
+          <option name="containerName" value="" />
+          <option name="sourceFilePath" value="junit.Dockerfile" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <list>
+      <item itemvalue="Docker.junit.Dockerfile" />
       <item itemvalue="Go Build.go build code-runner" />
       <item itemvalue="Go Test.TestTemplate in code-runner/services/codeRunner" />
       <item itemvalue="Go Test.TestJunitExtractor in code-runner/services/codeRunner/check/extractor" />
       <item itemvalue="Go Test.TestJunitExtractorIncorrectReport in code-runner/services/codeRunner/check/extractor" />
-      <item itemvalue="Go Test.TestScheduler_AddJob in code-runner/services/scheduler" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build code-runner" />
+        <item itemvalue="Docker.junit.Dockerfile" />
         <item itemvalue="Go Test.TestTemplate in code-runner/services/codeRunner" />
         <item itemvalue="Go Test.TestJunitExtractor in code-runner/services/codeRunner/check/extractor" />
         <item itemvalue="Go Test.TestJunitExtractorIncorrectReport in code-runner/services/codeRunner/check/extractor" />
-        <item itemvalue="Go Test.TestScheduler_AddJob in code-runner/services/scheduler" />
       </list>
     </recent_temporary>
   </component>
@@ -352,6 +351,11 @@
           <url>file://$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit_test.go</url>
           <line>20</line>
           <option name="timeStamp" value="66" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit.go</url>
+          <line>17</line>
+          <option name="timeStamp" value="78" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

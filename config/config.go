@@ -13,18 +13,17 @@ type ConfigManager struct {
 	Config *Config
 }
 type ContainerConfig struct {
-	ID                     string   `json:"id"`
-	Image                  string   `json:"image"`
-	CompilationCmd         string   `json:"compilationCmd"`
-	ExecutionCmd           string   `json:"executionCmd"`
-	ReserveContainerAmount int      `json:"reserveContainerAmount"`
-	Add                    []string `json:"add"`
-	ReportPath             string   `json:"reportPath"`
-	ReportExtractor        string   `json:"reportExtractor"`
-	Memory                 int64    `json:"memory"`
-	CPU                    float32  `json:"cpu"`
-	ReadOnly               bool     `json:"readOnly"`
-	DiskSize               string   `json:"diskSize"`
+	ID                     string  `json:"id"`
+	Image                  string  `json:"image"`
+	CompilationCmd         string  `json:"compilationCmd"`
+	ExecutionCmd           string  `json:"executionCmd"`
+	ReserveContainerAmount int     `json:"reserveContainerAmount"`
+	ReportPath             string  `json:"reportPath"`
+	ReportExtractor        string  `json:"reportExtractor"`
+	Memory                 int64   `json:"memory"`
+	CPU                    float32 `json:"cpu"`
+	ReadOnly               bool    `json:"readOnly"`
+	DiskSize               string  `json:"diskSize"`
 }
 
 type Config struct {

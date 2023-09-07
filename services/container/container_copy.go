@@ -1,13 +1,13 @@
 package container
 
 import (
+	"bytes"
 	errorutil "code-runner/error_util"
 	"code-runner/model"
 	"context"
 	"encoding/base64"
 	"fmt"
 	"io"
-	"os"
 	"time"
 )
 
@@ -34,40 +34,20 @@ func (cs *Service) CopyToContainer(ctx context.Context, id string, files []*mode
 	}
 	return nil
 }
-func (cs *Service) CopyResourcesToContainer(ctx context.Context, id string, resources []string) error {
-	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
-	defer cancel()
-	if len(resources) > 0 {
-		tar, err := createTar(resources)
-		gTar, err := gzipTar(tar)
-		if err != nil {
-			return errorutil.ErrorWrap(err, "could not create tar archive")
-		}
-		buf := make([]byte, base64.StdEncoding.EncodedLen(len(gTar)))
-		base64.StdEncoding.Encode(buf, gTar)
-		cmd := fmt.Sprintf("echo -n %s | base64 -d | tar -zxf -", buf)
-		c, _, err := cs.RunCommand(ctx, id, RunCommandParams{Cmd: cmd})
-		io.Copy(os.Stdout, c)
-		if err != nil {
-			return errorutil.ErrorWrap(err, fmt.Sprintf("could not copy resources into docker container %q", id))
-		}
-	}
-	return nil
-}
 func (cs *Service) CopyFromContainer(ctx context.Context, id string, path string) (string, error) {
 	if len(id) <= 0 {
 		return "", fmt.Errorf("could not copy files from docker container because of empty id argument")
 	}
-	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
-	defer cancel()
-	r, _, err := cs.cli.CopyFromContainer(ctx, id, path)
+	cmd := fmt.Sprintf("cat %s", path)
+	var buf bytes.Buffer
+	con, _, err := cs.RunCommand(context.Background(), id, RunCommandParams{Cmd: cmd})
+	defer con.Close()
 	if err != nil {
 		return "", errorutil.ErrorWrap(err, fmt.Sprintf("could not copy files from docker container %q", id))
 	}
-	defer r.Close()
-	result, err := io.ReadAll(r)
+	_, err = io.Copy(&buf, con)
 	if err != nil {
-		return "", err
+		return "", errorutil.ErrorWrap(err, fmt.Sprintf("could not copy files from docker container %q", id))
 	}
-	return string(result), nil
+	return buf.String(), nil
 }

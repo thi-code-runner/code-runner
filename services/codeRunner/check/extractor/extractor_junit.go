@@ -11,7 +11,7 @@ func init() {
 	addExtractor("junit-5-out", junitExtractOut)
 }
 
-var patternFile = regexp.MustCompile(`(?m)<testcase name="(.*)" classname="(.*)" time="(.*)">\s<failure message="(.*)" type.*?>`)
+var patternFile = regexp.MustCompile(`(?m)<testcase name="([\s\S]*?)"[\s\S]*?classname="([\s\S]*?)"[\s\S]*?time="([\s\S]*?)">[\s\S]*?<failure message="([\s\S]*?)"[\s\S]*?type[\s\S]*?>`)
 var patternOut = regexp.MustCompile(`(?m)className[\s\S]*?=[\s\S]*?'([\s\S]*?)'[\s\S]*?methodName\s*=\s*'([\s\S]*?)'[\s\S]*?:([\s\S]*?)org\.junit`)
 
 func junitExtractFile(r string) []*model.Detail {

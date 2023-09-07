@@ -33,7 +33,6 @@ type ContainerService interface {
 	ContainerRemove(context.Context, string, container.RemoveCommandParams) error
 	CopyToContainer(context.Context, string, []*model.SourceFile) error
 	CopyFromContainer(context.Context, string, string) (string, error)
-	CopyResourcesToContainer(context.Context, string, []string) error
 	GetReturnCode(context.Context, string) (int, error)
 	GetContainers(context.Context) ([]string, error)
 }
@@ -141,10 +140,6 @@ func (s *Service) GetContainer(ctx context.Context, cmdID string, sessionKey str
 				defer s.Unlock()
 				s.containers[containerID] = struct{}{}
 			}()
-		}
-		err := s.ContainerService.CopyResourcesToContainer(ctx, containerID, containerConf.Add)
-		if err != nil {
-			return nil, "", err
 		}
 	}
 	sess = session.PutSession(sessionKey, &session.Session{ContainerID: containerID, CmdID: containerConf.ID, Updated: time.Now()})
