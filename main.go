@@ -16,7 +16,12 @@ import (
 
 func main() {
 	ctx := context.Background()
-	configManager := config.NewConfigManager("./config.json")
+	var configManager *config.ConfigManager
+	if configPath := os.Getenv("CODE_RUNNER_CONFIG"); configPath != "" {
+		configManager = config.NewConfigManager(configPath)
+	} else {
+		configManager = config.NewConfigManager("/etc/code-runner/config.json")
+	}
 	configManager.ReadConfig()
 
 	containerService := container.NewService()

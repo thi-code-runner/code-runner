@@ -24,6 +24,7 @@ type ContainerConfig struct {
 	CPU                    float32 `json:"cpu"`
 	ReadOnly               bool    `json:"readOnly"`
 	DiskSize               string  `json:"diskSize"`
+	Timeout                int     `json:"timeout"`
 }
 
 type Config struct {
@@ -49,4 +50,15 @@ func (cr *ConfigManager) ReadConfig() {
 	}
 	cr.Config = &config
 	Conf = &config
+}
+
+func GetContainerConfig(id string) *ContainerConfig {
+	var containerConf ContainerConfig
+	for _, c := range Conf.ContainerConfig {
+		if id == c.ID {
+			containerConf = c
+			break
+		}
+	}
+	return &containerConf
 }

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"code-runner/config"
 	errorutil "code-runner/error_util"
 	"code-runner/model"
 	"code-runner/network/wswriter"
@@ -68,6 +69,12 @@ func (s *Server) initRoutes() {
 				log.Println(err)
 				continue
 			}
+			if err = v.Validate(); err != nil {
+				err = errorutil.ErrorWrap(err, "code-runner failed\n\trequest validation error")
+				wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(err.Error()))
+				log.Println(err)
+				continue
+			}
 			switch v.Type {
 			case "execute/run":
 				go func() {
@@ -79,9 +86,20 @@ func (s *Server) initRoutes() {
 						log.Println(err)
 						return
 					}
+					if err = runRequest.Validate(); err != nil {
+						err = errorutil.ErrorWrap(err, "code-runner failed\n\trequest validation error")
+						wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(err.Error()))
+						log.Println(err)
+						return
+					}
 					data := runRequest.Data
 					if data.Timeout == 0 {
-						data.Timeout = 10
+						cconfig := config.GetContainerConfig(data.Cmd)
+						if cconfig != nil && cconfig.Timeout != 0 {
+							data.Timeout = cconfig.Timeout
+						} else {
+							data.Timeout = 10
+						}
 					}
 					wsWriter := wswriter.NewWriter(c, wswriter.WriteOutput)
 					ctx, cancel := context.WithTimeout(r.Context(), time.Duration(data.Timeout)*time.Second)
@@ -107,6 +125,12 @@ func (s *Server) initRoutes() {
 						log.Println(err)
 						return
 					}
+					if err = stdinRequest.Validate(); err != nil {
+						err = errorutil.ErrorWrap(err, "code-runner failed\n\trequest validation error")
+						wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(err.Error()))
+						log.Println(err)
+						return
+					}
 					err := input.Input(r.Context(), stdinRequest.Stdin, sessionKey)
 					if err != nil {
 						wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(errorutil.ErrorWrap(err, "code-runner failed\n\trexecute/input failed").Error()))
@@ -123,8 +147,19 @@ func (s *Server) initRoutes() {
 						log.Println(err)
 						return
 					}
+					if err = testRequest.Validate(); err != nil {
+						err = errorutil.ErrorWrap(err, "code-runner failed\n\trequest validation error")
+						wswriter.NewWriter(c, wswriter.WriteError).Write([]byte(err.Error()))
+						log.Println(err)
+						return
+					}
 					if testRequest.Data.Timeout == 0 {
-						testRequest.Data.Timeout = 10
+						cconfig := config.GetContainerConfig(testRequest.Data.Cmd)
+						if cconfig != nil && cconfig.Timeout != 0 {
+							testRequest.Data.Timeout = cconfig.Timeout
+						} else {
+							testRequest.Data.Timeout = 10
+						}
 					}
 					wsWriter := wswriter.NewWriter(c, wswriter.WriteOutput)
 					ctx, cancel := context.WithTimeout(r.Context(), time.Duration(testRequest.Data.Timeout)*time.Second)

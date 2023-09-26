@@ -3,42 +3,41 @@
   "cacheCleanupIntervalS": 180,
   "containerConfig": [
     {
-      "id": "java-20",
+      "id": "java",
       "image": "eclipse-temurin:20-jdk",
       "compilationCmd": "javac *.java",
       "executionCmd": "java {{getSubstringUntil .FileName \".\"}}",
       "reserveContainerAmount": 0,
-      "Memory": 100,
-      "CPU": 0.5,
+      "memory": 100,
       "readOnly": true
     },
     {
-      "id": "junit-5",
+      "id": "junit",
       "image": "sylent/junit5-runner",
       "compilationCmd": "javac -d target -cp target:/resources/junit-platform-console-standalone-1.9.3.jar *.java",
       "executionCmd": "java -jar /resources/junit-platform-console-standalone-1.9.3.jar -cp target --select-class {{getSubstringUntil .FileName \".\"}} --reports-dir=./reports --details=tree",
       "reportExtractor": "junit-5-file",
       "reportPath": "/code-runner/reports/TEST-junit-jupiter.xml",
-      "Memory": 100,
-      "CPU": 2,
+      "memory": 100,
       "reserveContainerAmount": 0,
       "readOnly": false
     },
     {
-      "id": "script",
-      "image": "alpine:latest",
-      "executionCmd": "sh ./test.sh",
-      "reportExtractor": "junit-5-file",
-      "reportPath": "./blub",
-      "reserveContainerAmount": 0,
-      "readOnly": false,
-      "diskSize": "10m"
-    },
-
-    {"id": "py",
+      "id": "python",
       "image": "python",
       "executionCmd": "python main.py",
+      "memory": 100,
       "reserveContainerAmount": 0,
+      "readOnly": true,
+      "diskSize": "10m"
+    },
+    {
+      "id": "c",
+      "image": "gcc",
+      "compilationCmd": "gcc *.c -o app",
+      "executionCmd": "./app",
+      "reserveContainerAmount": 0,
+      "memory": 100,
       "readOnly": true,
       "diskSize": "10m"
     }

@@ -8,9 +8,14 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/generic_request.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/generic_request.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/run_request.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/run_request.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/stdin_request.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/stdin_request.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/test_request.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/test_request.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/junit-platform-console-standalone-1.9.3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/codeRunner/code_runner.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/codeRunner/code_runner.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/container/container_copy.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/container/container_copy.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +29,7 @@
       </list>
     </option>
   </component>
-  <component name="GOROOT" url="file:///usr/lib/go" />
+  <component name="GOROOT" url="file://$USER_HOME$/go/go1.20.3" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -87,6 +92,9 @@
     <configuration name="go build code-runner" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="code-runner" />
       <working_directory value="$PROJECT_DIR$" />
+      <envs>
+        <env name="CODE_RUNNER_CONFIG" value="./config.json" />
+      </envs>
       <kind value="PACKAGE" />
       <package value="code-runner" />
       <directory value="$PROJECT_DIR$" />
@@ -139,7 +147,9 @@
       <method v="2" />
     </configuration>
     <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
-      <deployment type="dockerfile" />
+      <deployment type="dockerfile">
+        <settings />
+      </deployment>
       <method v="2" />
     </configuration>
     <configuration name="junit.Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
@@ -186,6 +196,8 @@
       <workItem from="1692482663208" duration="514000" />
       <workItem from="1693827117506" duration="13049000" />
       <workItem from="1693853450755" duration="2123000" />
+      <workItem from="1695556657924" duration="23000" />
+      <workItem from="1695725740076" duration="6603000" />
     </task>
     <task id="LOCAL-00001" summary="enable stdin passing from websocket connection">
       <created>1688410773989</created>
@@ -299,7 +311,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690982186154</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="rm add config functionality&#10;change extractor regex pattern">
+      <created>1694123333820</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1694123333820</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -334,7 +353,8 @@
     <MESSAGE value="add memory and cpu limits as well as read only flag" />
     <MESSAGE value="formatting and json naming" />
     <MESSAGE value="Dockerfile and Makefile" />
-    <option name="LAST_COMMIT_MESSAGE" value="Dockerfile and Makefile" />
+    <MESSAGE value="rm add config functionality&#10;change extractor regex pattern" />
+    <option name="LAST_COMMIT_MESSAGE" value="rm add config functionality&#10;change extractor regex pattern" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
@@ -353,9 +373,19 @@
           <option name="timeStamp" value="66" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/services/codeRunner/check/extractor/extractor_junit.go</url>
-          <line>17</line>
-          <option name="timeStamp" value="78" />
+          <url>file://$PROJECT_DIR$/model/generic_request.go</url>
+          <line>13</line>
+          <option name="timeStamp" value="68" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/model/run_request.go</url>
+          <line>21</line>
+          <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/server/server.go</url>
+          <line>103</line>
+          <option name="timeStamp" value="72" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

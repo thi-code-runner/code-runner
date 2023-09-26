@@ -102,14 +102,8 @@ func NewService(ctx context.Context, containerService ContainerService, schedule
 	return s
 }
 func (s *Service) GetContainer(ctx context.Context, cmdID string, sessionKey string) (*config.ContainerConfig, string, error) {
-	var containerConf config.ContainerConfig
-	for _, c := range config.Conf.ContainerConfig {
-		if cmdID == c.ID {
-			containerConf = c
-			break
-		}
-	}
-	if containerConf.ID == "" {
+	containerConf := config.GetContainerConfig(cmdID)
+	if containerConf == nil || containerConf.ID == "" {
 		message := fmt.Errorf("no configuration found for %q", cmdID)
 		return nil, "", message
 	}
@@ -143,7 +137,7 @@ func (s *Service) GetContainer(ctx context.Context, cmdID string, sessionKey str
 		}
 	}
 	sess = session.PutSession(sessionKey, &session.Session{ContainerID: containerID, CmdID: containerConf.ID, Updated: time.Now()})
-	return &containerConf, containerID, nil
+	return containerConf, containerID, nil
 }
 func (s *Service) Compile(ctx context.Context, containerID string, compilationCmd string, writer wswriter.Writer) error {
 	if len(compilationCmd) > 0 {
