@@ -29,7 +29,7 @@ func (cs *Service) CreateAndStartContainer(ctx context.Context, image string, pa
 		AttachStdout:    true,
 		AttachStdin:     true,
 		OpenStdin:       true,
-	}, &container.HostConfig{ReadonlyRootfs: true, Tmpfs: map[string]string{"/code-runner": fmt.Sprintf("rw,size=%s", diskSize)}, NetworkMode: "none", AutoRemove: true, Resources: container.Resources{PidsLimit: &pidsLimit, Memory: params.Memory * 1024 * 1024, NanoCPUs: int64(params.CPU * 100000 * 10000)}}, nil, nil, containerName)
+	}, &container.HostConfig{ReadonlyRootfs: true, Tmpfs: map[string]string{"/code-runner": fmt.Sprintf("rw,size=%s,exec", diskSize)}, NetworkMode: "none", AutoRemove: true, Resources: container.Resources{PidsLimit: &pidsLimit, Memory: params.Memory * 1024 * 1024, NanoCPUs: int64(params.CPU * 100000 * 10000)}}, nil, nil, containerName)
 	if err != nil {
 		return "", errorutil.ErrorWrap(err, fmt.Sprintf("could not create container with image %q", image))
 	}
