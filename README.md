@@ -1,15 +1,15 @@
 # CODE-RUNNER
 
-## DESCRIPTION
-code-runner is a sandbox capable of running arbitrary 
-source code by using Docker containers.
-It allows for interaction between client and server by using the
-WebSocket protocol. Code-runner is configured with a configuration file
-which describes how code has to be compiled and run.
+## Description
 
-## CONFIGURATION
+code-runner is a sandbox capable of running arbitrary source code by using Docker containers.
+It allows for interaction between client and server by using the WebSocket protocol. 
+Code-runner is configured with a configuration file which describes how code has to be compiled and run.
 
-example configuration file:
+## Configuration
+
+Example configuration file:
+
 ````
 {
   "hostCleanupIntervalS": 360,
@@ -54,9 +54,42 @@ example configuration file:
 - readOnly: wether file access should be possible
 - diskSize: size of disk if readOnly is set to false
 
+## Build
+
+```bash
+make build
+```
+
+... or ...
+
+```bash
+docker build -t code-runner .
+```
+
+## Start
+
+```bash
+CODE_RUNNER_CONFIG=`pwd`/config.json ./bin/code-runner
+```
+
+... or ...
+
+```bash
+docker run --rm -p 8080:8080 -v `pwd`/config.json:/etc/code-runner/config.json -v /var/run/docker.sock:/var/run/docker.sock code-runner
+```
+
 ## API
 
-example API payload:
+Calls can be tested by using any websocket based client. One would be `wscat`, can be installed with `npm install -g wscat`. Connect to server by using:
+
+```bash
+wscat -c ws://localhost:8080/run
+```
+
+### Run: execute/run
+
+Example API payload:
+
 ```
 {
   "type": "execute/run",
@@ -72,9 +105,60 @@ example API payload:
   }
 }
 ```
-types of WebSocket messages:
-- execute/run
-- execute/input
-- execute/test
 
-structure of the payload can be examined in the model folder
+### Input: execute/input
+
+Add input, if example waits for input.
+
+```json
+{
+  "type": "execute/run",
+  "data": {
+    "cmd": "java-20",
+    "mainfilename": "Main.java",
+    "sourcefiles": [
+      {
+        "filename": "Main.java",
+        "content": "class Main{public static void main(String[] args) throws Exception { System.in.read();System.out.println(\"Hello World!\"); }}"
+      }
+    ]
+  }
+}
+```
+
+```json
+{
+  "type": "execute/input", 
+  "stdin": "\n"
+}
+```
+
+### Test: execute/test
+
+Run test with test framework, e.g., JUnit or Output compare
+
+```json
+{
+    "type": "execute/test",
+    "data": {
+        "cmd": "java",
+        "mainfilename": "Main.java",
+        "tests": [
+            {
+                "type": "output",
+                "param": {
+                    "expected": "Hello World!"
+                }
+            }
+        ],
+        "sourcefiles": [
+            {
+                "filename": "Main.java",
+                "content": "class Main{public static void main(String[] args) {System.out.print(\"Hello World!\");}}"
+            }
+        ]
+    }
+}
+```
+
+_Hint: Structure of the payload can be examined in the model folder_
