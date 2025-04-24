@@ -2,12 +2,8 @@ package run
 
 import (
 	errorutil "code-runner/error_util"
-	"code-runner/network/wswriter"
 	"code-runner/services/codeRunner"
-	"code-runner/services/container"
-	"code-runner/session"
 	"context"
-	"errors"
 	"fmt"
 	"log"
 )
@@ -16,6 +12,13 @@ func Run(ctx context.Context, id string, params ExecuteParams) error {
 	containerConf, containerID, err := params.CodeRunner.GetContainer(ctx, id, params.SessionKey)
 	if err != nil {
 		message := "could not create sandbox environment"
+		errorSlug := errorutil.ErrorSlug()
+		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
+		return errorutil.ErrorWrap(errorSlug, message)
+	}
+	con, err := params.CodeRunner.GetContainerConnection(ctx, params.SessionKey, containerID, params.Writer, params.RequestId)
+	if err != nil {
+		message := fmt.Sprintf("could not create connection to container %q", containerID)
 		errorSlug := errorutil.ErrorSlug()
 		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
 		return errorutil.ErrorWrap(errorSlug, message)
@@ -41,28 +44,9 @@ func Run(ctx context.Context, id string, params ExecuteParams) error {
 		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
 		return errorutil.ErrorWrap(errorSlug, message)
 	}
-	con, _, err := params.CodeRunner.ContainerService.RunCommand(context.Background(), containerID, container.RunCommandParams{Cmd: cmd, User: "nobody"})
+	err = params.CodeRunner.ContainerService.ExecuteCommand(ctx, con, cmd, true)
 	if err != nil {
 		message := fmt.Sprintf("could not execute program with command %q", cmd)
-		errorSlug := errorutil.ErrorSlug()
-		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
-		return errorutil.ErrorWrap(errorSlug, message)
-	}
-	defer con.Close()
-	sess, err := session.GetSession(params.SessionKey)
-	if err != nil {
-		message := fmt.Sprintf("could not retreive user session with key %q", params.SessionKey)
-		errorSlug := errorutil.ErrorSlug()
-		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
-		return errorutil.ErrorWrap(errorSlug, message)
-	}
-	sess.Con = con
-	err = params.CodeRunner.CopyWithTimeout(ctx)(params.Writer.WithType(wswriter.WriteOutput), con)
-	if err != nil {
-		message := fmt.Sprintf("could not execute command %q, please try again", cmd)
-		if errors.Is(err, errorutil.TimeoutErr) {
-			message = fmt.Sprintf("could not execute command %q, because it timed out", cmd)
-		}
 		errorSlug := errorutil.ErrorSlug()
 		log.Println(errorutil.ErrorWrap(errorSlug, errorutil.ErrorWrap(err, message).Error()))
 		return errorutil.ErrorWrap(errorSlug, message)

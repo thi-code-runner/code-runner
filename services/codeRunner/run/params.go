@@ -12,4 +12,5 @@ type ExecuteParams struct {
 	Files      []*model.SourceFile
 	MainFile   string
 	CodeRunner *codeRunner.Service
+	RequestId  string
 }

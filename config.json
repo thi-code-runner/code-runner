@@ -7,7 +7,6 @@
       "image": "eclipse-temurin:20-jdk",
       "compilationCmd": "javac *.java",
       "executionCmd": "java {{getSubstringUntil .FileName \".\"}}",
-      "reserveContainerAmount": 0,
       "memory": 100,
       "readOnly": true
     },
@@ -19,7 +18,6 @@
       "reportExtractor": "junit-5-file",
       "reportPath": "/code-runner/reports/TEST-junit-jupiter.xml",
       "memory": 100,
-      "reserveContainerAmount": 0,
       "readOnly": false
     },
     {
@@ -27,7 +25,6 @@
       "image": "python",
       "executionCmd": "python main.py",
       "memory": 100,
-      "reserveContainerAmount": 0,
       "readOnly": true,
       "diskSize": "10m"
     },
@@ -36,7 +33,6 @@
       "image": "gcc",
       "compilationCmd": "gcc *.c -o app",
       "executionCmd": "./app",
-      "reserveContainerAmount": 0,
       "memory": 100,
       "readOnly": true,
       "diskSize": "10m"

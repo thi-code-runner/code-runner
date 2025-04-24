@@ -13,6 +13,7 @@ type CheckParams struct {
 	CodeRunner *codeRunner.Service
 	Tests      []*model.TestConfiguration
 	MainFile   string
+	RequestId  string
 }
 
 type FileCheckParams struct {

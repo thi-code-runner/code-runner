@@ -17,8 +17,10 @@ func fileTest(ctx context.Context, sess *session.Session, executionCmd string, c
 	resultData.Passed = true
 
 	con, executionID, err := params.CodeRunner.ContainerService.RunCommand(context.Background(), sess.ContainerID, container.RunCommandParams{Cmd: executionCmd, User: "nobody"})
+	if err != nil {
+		return nil, errorutil.ErrorWrap(err, fmt.Sprintf("could not create connection to container %q", sess.ContainerID))
+	}
 	defer con.Close()
-	sess.Con = con
 	err = params.CodeRunner.CopyWithTimeout(ctx)(params.Writer.WithType(wswriter.WriteOutput), con)
 	if err != nil {
 		return nil, errorutil.ErrorWrap(err, "execution failed")

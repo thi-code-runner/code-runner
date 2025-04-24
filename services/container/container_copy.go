@@ -27,11 +27,21 @@ func (cs *Service) CopyToContainer(ctx context.Context, id string, files []*mode
 		buf := make([]byte, base64.RawStdEncoding.EncodedLen(len(tar)))
 		base64.RawStdEncoding.Encode(buf, tar)
 		cmd := fmt.Sprintf("echo -n %s | base64 -d | tar -xf -", buf)
+
+		// Clean up the container's working directory before copying files
+		cleanupCmd := "rm -rf ./*"
+		_, _, err = cs.RunCommand(ctx, id, RunCommandParams{Cmd: cleanupCmd})
+		if err != nil {
+			return errorutil.ErrorWrap(err, fmt.Sprintf("failed to clean up working directory in docker container %q", id))
+		}
+
 		_, _, err = cs.RunCommand(ctx, id, RunCommandParams{Cmd: cmd})
 		if err != nil {
 			return errorutil.ErrorWrap(err, fmt.Sprintf("could not copy files into docker container %q", id))
 		}
 	}
+
+	time.Sleep(time.Millisecond * 100) // Todo: Replace with a better solution to wait for the container to be ready
 	return nil
 }
 func (cs *Service) CopyFromContainer(ctx context.Context, id string, path string) (string, error) {

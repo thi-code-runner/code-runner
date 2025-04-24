@@ -29,7 +29,7 @@ func main() {
 
 	cr := codeRunner.NewService(ctx, containerService, schedulerService)
 
-	s, err := server.NewServer(8080, "localhost")
+	s, err := server.NewServer(8080, "0.0.0.0")
 	if err != nil {
 		log.Fatalf("could not start init server: %s\n", err)
 	}

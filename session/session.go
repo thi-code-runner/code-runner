@@ -1,6 +1,7 @@
 package session
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"sync"
@@ -17,6 +18,7 @@ type Session struct {
 	ContainerID string
 	CmdID       string
 	Con         io.ReadWriteCloser
+	CancelFunc  context.CancelFunc
 	Updated     time.Time
 }
 
@@ -50,4 +52,22 @@ func DeleteSession(key string) {
 	mu.Lock()
 	defer mu.Unlock()
 	delete(sessions, key)
+}
+
+func StopSession(key string) {
+	mu.Lock()
+	defer mu.Unlock()
+
+	sess, ok := sessions[key]
+	if !ok || sess == nil {
+		return
+	}
+
+	if sess.Con != nil {
+		_ = sess.Con.Close()
+	}
+
+	if sess.CancelFunc != nil {
+		sess.CancelFunc()
+	}
 }

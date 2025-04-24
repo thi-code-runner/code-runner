@@ -9,12 +9,16 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 )
 
 func outputTest(ctx context.Context, sess *session.Session, executionCmd string, test *model.TestConfiguration, params CheckParams) (*model.TestResponseData, error) {
 	con, _, err := params.CodeRunner.ContainerService.RunCommand(context.Background(), sess.ContainerID, container.RunCommandParams{Cmd: executionCmd, User: "nobody"})
+	if err != nil {
+		message := fmt.Sprintf("could not create connection to container %q", sess.ContainerID)
+		return nil, errorutil.ErrorWrap(err, message)
+	}
 	defer con.Close()
-	sess.Con = con
 	err = params.CodeRunner.CopyWithTimeout(ctx)(params.Writer.WithType(wswriter.WriteOutput), con)
 	if err != nil {
 		message := fmt.Sprintf("could not perform output test with command %q", executionCmd)
@@ -23,8 +27,9 @@ func outputTest(ctx context.Context, sess *session.Session, executionCmd string,
 		}
 		return nil, errorutil.ErrorWrap(err, message)
 	}
-	if string(params.Writer.GetOutput()) == test.Param["expected"] {
+	actual := strings.TrimPrefix(string(params.Writer.GetOutput()), "$ ")
+	if actual == test.Param["expected"] {
 		return &model.TestResponseData{Test: test, Passed: true}, nil
 	}
-	return &model.TestResponseData{Test: test, Message: fmt.Sprintf("output test failed: expected: %q, actual: %q\n", test.Param["expected"], params.Writer.GetOutput()), Passed: false}, nil
+	return &model.TestResponseData{Test: test, Message: fmt.Sprintf("output test failed: expected: %q, actual: %q\n", test.Param["expected"], actual), Passed: false}, nil
 }

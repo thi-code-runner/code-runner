@@ -6,6 +6,7 @@ import (
 )
 
 type Request struct {
+	Id   string                 `json:"id"`
 	Type string                 `json:"type"`
 	Data map[string]interface{} `json:"data"`
 }
